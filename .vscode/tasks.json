@@ -1,0 +1,26 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Compilar Pascal",
+            "type": "shell",
+            "command": "fpc",
+            "args": [
+                "-B",
+                "-gl",
+                "-gw",
+                "-FE${workspaceFolder}/src",
+                "-FU${workspaceFolder}/src",
+                "${workspaceFolder}/src/Tetris.pas"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}/src"
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": []
+        }
+    ]
+}

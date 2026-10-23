@@ -1,5 +1,6 @@
 /archivos a ignorar
 
-*.o
-*.ppu
-*.exe
+.vscode/
+.o
+.ppu
+.exe
