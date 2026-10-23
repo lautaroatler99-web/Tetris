@@ -409,8 +409,8 @@ procedure borrarLinea (var G:interfaz.grilla;PosInicio:integer);
 				X:=G.pos[i,j].X;			//apunto las coordenadas para
 				Y:=G.pos[i,j].Y;			//empezar a dibujar el cuadro
 				
-				bar(x,y,x+tam,y+tam); //creo el cuadrado relleno con un pixel de distancia
-				rectangle(x,y,x+tam,y+tam); //borde del cuadrado con un pixel de distancia
+				bar(x+1,y+1,x+tam-1,y+tam-1); //creo el cuadrado relleno con un pixel de distancia
+				rectangle(x+1,y+1,x+tam-1,y+tam-1); //borde del cuadrado con un pixel de distancia
 			end;
 	end;
 
