@@ -209,14 +209,13 @@ function limites (rotada:figuras.pieza):boolean;
 		ok:=true;		
 		for i:=1 to 4 do
 			for j:=1 to 4 do	
-				if (rotada.posValida[i,j]) then begin
+				if (rotada.posValida[i,j]) then
 					if ( (rotada.posBloque[i,j].Y < 2) or			//
 						(rotada.posBloque[i,j].Y >21) or			//comprobamos que no haya desbordamiento
 						(rotada.posBloque[i,j].X < 2) or			//una vez rotada
 						(rotada.posBloque[i,j].X > 11)				//
 						) then										//
 						ok:=false;
-				end;
 		limites:=ok;
 	end;
 	
