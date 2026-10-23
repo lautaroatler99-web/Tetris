@@ -36,6 +36,7 @@ limitesPieza=array[1..4] of integer; //vector que retrata el lateral de la pieza
 //							7: Borramos los pixeles de la pieza original
 //							8: Reemplazamos la grilla original por la copia ya actualizada
 //							9: Dibujamos los pixeles de la pieza rotada a partir de sus coordenadas y de PixelX() y PixelY();
+//							10: EXTRA: La figura I es un caso especial y se tiene que rotar manual
 
 
 procedure registrarAccion (var key:char;var P:figuras.pieza;var Grilla:interfaz.grilla);
@@ -114,7 +115,8 @@ function comprobarRotacion (rotada:figuras.pieza; copiaGrilla:interfaz.grilla):b
 		comprobarRotacion:=ok;
 	end;
 
-procedure rotarPieza (P: figuras.pieza; var rotada:figuras.pieza);
+
+procedure rotarPieza (P: figuras.pieza; var R:figuras.pieza);
 // procedimiento que se encarga de rotar la pieza desde el punto fijo [2,3]
 var 
 	i, j, minX, minY: integer;
@@ -122,51 +124,81 @@ var
 	centroX, centroY: integer;
 	nuevoI, nuevoJ: integer;
 	nuevaX, nuevaY: integer;
-	
+	esVertical:boolean;
 begin
-	figuras.inicializarPieza(rotada);    //inicializo la nueva pieza
-
+	figuras.inicializarPieza(R);    //inicializo la nueva pieza
+	
 	minX := 99;
 	minY := 99;
-    for i := 1 to 4 do				//rotacion//
-        for j := 1 to 4 do
-            if (P.posValida[i, j]) then begin
-                if ((P.posBloque[i, j].X - (j - 1)) < minX) then
-                    minX := P.posBloque[i, j].X - (j - 1);				//calcula el limite izquierdo de la matriz		
-                if ((P.posBloque[i, j].Y - (i - 1)) < minY) then
-                    minY := P.posBloque[i, j].Y - (i - 1);				//calcula el limite superior de la matriz
-            end;
-
-	centroX := minX + 2;            
-	centroY := minY + 1;            
     
-	for i := 1 to 4 do      
+    //se posiciona en la esquina relativa de la pieza en la grilla
+	for i := 1 to 4 do
 		for j := 1 to 4 do
 			if (P.posValida[i, j]) then begin
-				X := P.posBloque[i, j].X;
-				Y := P.posBloque[i, j].Y;
-				
-				//nuevos indices en la matriz 4x4 rotando 90° alrededor de (2,3)
-				nuevoI := 2 + (j - 3);
-				nuevoJ := 3 - (i - 2);
+				if ((P.posBloque[i, j].X - (j - 1)) < minX) then
+					minX := P.posBloque[i, j].X - (j - 1);				//calcula el limite izquierdo de la matriz		
+				if ((P.posBloque[i, j].Y - (i - 1)) < minY) then
+					minY := P.posBloque[i, j].Y - (i - 1);				//calcula el limite superior de la matriz
+			end;
 
-				//controlamos posible desbordamiento por la figura I
-                if nuevoI < 1 then nuevoI := 1;
-                if nuevoI > 4 then nuevoI := 4;
-                if nuevoJ < 1 then nuevoJ := 1;
-                if nuevoJ > 4 then nuevoJ := 4;
+
+	if (P.tipo <>'figI') then begin //verifico si la pieza es figI ya que al rotarla desborda la matriz
+		centroX := minX + 2;            
+		centroY := minY + 1;            
+    
+		for i := 1 to 4 do      
+			for j := 1 to 4 do
+				if (P.posValida[i, j]) then begin
+					X := P.posBloque[i, j].X;
+					Y := P.posBloque[i, j].Y;
+				
+					//nuevos indices en la matriz 4x4 rotando 90° alrededor de (2,3)
+					nuevoI := 2 + (j - 3);
+					nuevoJ := 3 - (i - 2);
+
+					nuevaX := centroX - (Y - centroY);
+					nuevaY := centroY + (X - centroX);
                 
-                nuevaX := centroX - (Y - centroY);
-                nuevaY := centroY + (X - centroX);
-                
-                rotada.posValida[nuevoI, nuevoJ] := true;          
-                rotada.posBloque[nuevoI, nuevoJ].X := nuevaX;     
-                rotada.posBloque[nuevoI, nuevoJ].Y := nuevaY;     
-            end;
-            
-    rotada.colorBorde := P.colorBorde;				//
-    rotada.colorRelleno := P.colorRelleno;			//fuera del bucle copiamos sus colores
-    rotada.rotacion := P.rotacion;					//y rotacion
+					R.posValida[nuevoI, nuevoJ] := true;          
+					R.posBloque[nuevoI, nuevoJ].X := nuevaX;     
+					R.posBloque[nuevoI, nuevoJ].Y := nuevaY;     
+				end;
+	end
+	else begin		//es la figura en I
+		
+		esVertical:=false;
+		
+		for j:=1 to 4 do		//recorro de izquierda a derecha la fila 1
+			if (P.posValida[1,j]) then
+				esVertical:=true;
+	
+		if (esVertical) then begin	//si es vertical entonces la paso a horizontal
+			
+			////////////Vertical >>>>>>>Horizontal////////////
+
+			// la construyo manualmente de forma horizontal
+			for j:=1 to 4 do begin
+				R.posValida[2,j]:=true;
+				R.posBloque[2,j].X:= minX + j-1;
+				R.posBloque[2,j].Y:= minY+1;		//fila 2
+			end;
+		end
+		
+		else begin
+			//////////// Horizontal >>>>>>>Vertical////////////
+
+			// la construyo manualmente de forma vertical
+			for i:=1 to 4 do begin
+				R.posValida[i,2]:=true;
+				R.posBloque[i,2].X:= minX+ 1;	//columna 2
+				R.posBloque[i,2].Y:= minY + i-1;
+			end;
+		end;
+	end;
+	R.colorBorde := P.colorBorde;				//
+	R.colorRelleno := P.colorRelleno;			//fuera del bucle copiamos sus colores
+	R.rotacion := P.rotacion;					//y rotacion
+	R.tipo:=P.tipo;
 end;
 
 
@@ -177,13 +209,14 @@ function limites (rotada:figuras.pieza):boolean;
 		ok:=true;		
 		for i:=1 to 4 do
 			for j:=1 to 4 do	
-				if (rotada.posValida[i,j]) then
+				if (rotada.posValida[i,j]) then begin
 					if ( (rotada.posBloque[i,j].Y < 2) or			//
 						(rotada.posBloque[i,j].Y >21) or			//comprobamos que no haya desbordamiento
 						(rotada.posBloque[i,j].X < 2) or			//una vez rotada
 						(rotada.posBloque[i,j].X > 11)				//
 						) then										//
 						ok:=false;
+				end;
 		limites:=ok;
 	end;
 	
@@ -204,7 +237,7 @@ function rotacion (var P:figuras.pieza;var grilla:interfaz.grilla):boolean;
 		
 		rotarPieza(P,R);			//rotamos la pieza
 		
-		limite:=limites(R);		//comprobamos que la pieza no se haya desbordado
+		limite:=limites(R);		//comprobamos que la pieza no se haya desbordado de la grilla
 		
 		puedeRotar:=false;
 
