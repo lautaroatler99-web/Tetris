@@ -96,6 +96,59 @@ var fila,columna,x,y:integer;
 	end;
 
 
+procedure generarInterfazNivel();
+	begin
+	
+	end;
+	
+	
+procedure generarInterSigPieza();
+//crea la parte visual del nivel
+	begin
+		settextstyle(0,0,3); //tamaño de letra
+			
+		setcolor(lightgray);		//color del marco
+		
+		SetLineStyle(SolidLn, 0, ThickWidth);	//la linea es mas gruesa
+		rectangle(interfaz.pixelX(-6)+15,		//dibujo el marco del score
+		interfaz.pixelY(3),
+		interfaz.PixelX(0),
+		interfaz.pixelY(6));
+		
+		setcolor(5);		//color de 'Score'
+		
+		outTextXY( (interfaz.pixelX(-4)-10),(interfaz.pixelY(8)+15),'Next');	//sig pieza
+		
+		setColor(white);
+		
+		outTextXY( (interfaz.pixelX(-5)+10),(interfaz.pixelY(10)),'00000');
+
+		SetLineStyle(SolidLn, 0, NormWidth);	//pongo el grosor de la linea a la normalidad
+	end;
+
+
+procedure generarInterfazPuntuacion ();
+//crea el marco visual de la puntuacion
+	begin
+		settextstyle(0,0,3); //tamaño de letra
+			
+		setcolor(lightgray);		//color del marco
+		
+		SetLineStyle(SolidLn, 0, ThickWidth);	//la linea es mas gruesa
+		rectangle(interfaz.pixelX(-6)+15,		//dibujo el marco del score
+		interfaz.pixelY(8),
+		interfaz.PixelX(0),
+		interfaz.pixelY(11));
+		
+		setcolor(lightblue);		//color de 'Score'
+		outTextXY( (interfaz.pixelX(-4)-20),(interfaz.pixelY(3)+15),'Score');	//posicion relativa al marco de 'Score'
+		
+		setColor(white);
+		
+		outTextXY( (interfaz.pixelX(-5)+10),(interfaz.pixelY(5)),'00000');	//posicion de puntuacion
+		SetLineStyle(SolidLn, 0, NormWidth);	//pongo el grosor de la linea a la normalidad
+	end;
+
 procedure pausa ();
 //pausa el juego momentaneamente hasta que se presione #27 (ESC)
 	var ok:boolean; key:char;
@@ -105,12 +158,12 @@ procedure pausa ();
 			key:=readkey;
 			if (key=#27) then
 				ok:=false;
-		end;
+			end;
 	end;
 
 	
 procedure iniciarJuego(var G:grilla);	//la grilla total consta de 12*22 (10*20 jugable + el marco)
-	//inicializa el modo grafico, configura el color y crea el marco.
+	//inicializa el modo grafico, configura el color y los demas componentes.
 var gd,gm:integer;	//puestos para la inferfaz grafica
 	x0,y0:integer;	//posiciones del inicio
 	begin
@@ -120,7 +173,12 @@ var gd,gm:integer;	//puestos para la inferfaz grafica
 
 		x0:=pixelX(1);	//le mando 1 por ser la base
 		y0:=pixelY(1);	//
-
-		crearMarco(G,x0,y0);	//creamos la borde de cuadros
+		
+		/////////////	INTERFAZ	/////////////
+		
+		crearMarco(G,x0,y0);			//crea el borde de cuadros
+		generarInterfazPuntuacion();	//puntacion
+		generarInterSigPieza();			//sig pieza
+		generarInterfazNivel(); 		//nivel
 	end;
 end.
