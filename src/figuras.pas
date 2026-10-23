@@ -189,8 +189,8 @@ var i,j,tam,x,y:integer;
 					x:=G.pos[P.posBloque[i,j].Y , P.posBloque[i,j].X].X;
 					y:=G.pos[P.posBloque[i,j].Y , P.posBloque[i,j].X].Y;
 					
-					bar(x,y,x+tam,y+tam);
-					rectangle(x,y,x+tam,y+tam);
+					bar(x+1,y+1,x+tam-1,y+tam-1);
+					rectangle(x+1,y+1,x+tam-1,y+tam-1);
 				end;
 	end;
 
@@ -225,8 +225,8 @@ x,y:integer;
 					G.color[fila,columna].colorRelleno:=P.colorRelleno;
 					G.color[fila,columna].colorBorde:=P.colorBorde;
 
-					bar(x,y,x+tam,y+tam);		//imprimo el bloque
-					rectangle(x,y,x+tam,y+tam); //imprimo su borde
+					bar(x+1,y+1,x+tam-1,y+tam-1);		//imprimo el bloque
+					rectangle(x+1,y+1,x+tam-1,y+tam-1); //imprimo su borde
 				end;
 	end;
 
