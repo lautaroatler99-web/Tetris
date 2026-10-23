@@ -1,5 +1,5 @@
 /archivos a ignorar
 
-.o
-.ppu
-.exe
+*.o
+*.ppu
+*.exe
