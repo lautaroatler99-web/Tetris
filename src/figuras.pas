@@ -158,7 +158,7 @@ procedure elegirFigura(var P:pieza);
 //elije aleatoriamente la pieza
 var figura:integer;
 	begin
-		figura:=4;//(random(9)+1); //hay un total de 9 figuras
+		figura:=(random(9)+1); //hay un total de 9 figuras
 		case figura of
 			1:figL (P.posValida,P.rotacion,P.tipo);
 			2:figInvertedL (P.posValida,P.rotacion,P.tipo);
