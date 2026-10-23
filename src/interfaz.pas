@@ -102,11 +102,9 @@ procedure pausa ();
 	begin;
 		ok:=true;
 		while (ok) do begin
-			if keypressed then begin
-				key:=readkey;
-				if (key=#27) then
-					ok:=false;
-			end;
+			key:=readkey;
+			if (key=#27) then
+				ok:=false;
 		end;
 	end;
 
