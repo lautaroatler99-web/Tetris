@@ -21,6 +21,7 @@ type
 		colorBorde:integer;
 		colorRelleno:integer;
 		rotacion:boolean;
+		tipo:string;
 	end;
 
 	
@@ -32,7 +33,7 @@ procedure inicializarPieza (var P:pieza);
 
 implementation
 
-procedure figL(var f:fig;var rotacion:boolean);
+procedure figL(var f:fig;var rotacion:boolean;var tipo:string);
 //figura L
 	begin
 		//X,Y
@@ -41,9 +42,10 @@ procedure figL(var f:fig;var rotacion:boolean);
 		f[3,3]:=true;	//		[][]
 		f[3,4]:=true;
 		rotacion:=true;
+		tipo:='figL';
 	end;
 
-procedure figInvertedL (var f:fig;var rotacion:boolean);
+procedure figInvertedL (var f:fig;var rotacion:boolean;var tipo:string);
 //figura L invertida
 	begin
 		//X,Y
@@ -52,9 +54,10 @@ procedure figInvertedL (var f:fig;var rotacion:boolean);
 		f[3,3]:=true;	//	    [][]
 		f[3,2]:=true;
 		rotacion:=true;
+		tipo:='figInvertedL';
 	end;
 
-procedure figPlus (var f:fig;var rotacion:boolean);
+procedure figPlus (var f:fig;var rotacion:boolean;var tipo:string);
 //figura cruz
 	begin
 		//X,Y
@@ -64,9 +67,10 @@ procedure figPlus (var f:fig;var rotacion:boolean);
 		f[2,4]:=true;
 		f[2,2]:=true;
 		rotacion:=false;
+		tipo:='figPlus';
 	end;
 	
-procedure figI (var f:fig;var rotacion:boolean);
+procedure figI (var f:fig;var rotacion:boolean;var tipo:string);
 //figura en I
 	begin
 		//X,Y
@@ -75,9 +79,10 @@ procedure figI (var f:fig;var rotacion:boolean);
 		f[3,3]:=true;	//		[]
 		f[4,3]:=true;	//		[]
 		rotacion:=true;
+		tipo:='figI';
 	end;
 	
-procedure figT (var f:fig;var rotacion:boolean);
+procedure figT (var f:fig;var rotacion:boolean;var tipo:string);
 //figura en T
 	begin
 		//X,Y
@@ -86,9 +91,10 @@ procedure figT (var f:fig;var rotacion:boolean);
 		f[1,4]:=true;	//		[]
 		f[2,3]:=true;
 		rotacion:=true;
+		tipo:='figT';
 	end;
 	
-procedure figS (var f:fig;var rotacion:boolean);
+procedure figS (var f:fig;var rotacion:boolean;var tipo:string);
 //sigura en S
 	begin
 		//X,Y
@@ -97,9 +103,10 @@ procedure figS (var f:fig;var rotacion:boolean);
 		f[2,3]:=true;	//	  [][]
 		f[2,2]:=true;
 		rotacion:=true;
+		tipo:='figS';
 	end;
 	
-procedure figInvertedS (var f:fig;var rotacion:boolean);
+procedure figInvertedS (var f:fig;var rotacion:boolean;var tipo:string);
 //figura en S invertida
 	begin
 		//X,Y	
@@ -108,9 +115,10 @@ procedure figInvertedS (var f:fig;var rotacion:boolean);
 		f[2,3]:=true;	//	    [][]
 		f[2,4]:=true;
 		rotacion:=true;
+		tipo:='figInvertedS';
 	end;
 
-procedure figQuad (var f:fig;var rotacion:boolean);
+procedure figQuad (var f:fig;var rotacion:boolean;var tipo:string);
 //figura en cuadrado
 	begin
 		//X,Y
@@ -119,15 +127,18 @@ procedure figQuad (var f:fig;var rotacion:boolean);
 		f[2,2]:=true;	//	[][]
 		f[2,3]:=true;
 		rotacion:=false;
+		tipo:='figQuad';
 	end;
 	
-procedure figPoint (var f:fig;var rotacion:boolean);
+procedure figPoint (var f:fig;var rotacion:boolean;var tipo:string);
 //figura en punto
 	begin
 		//X,Y
 		f[2,3]:=true;	//	[]
 		rotacion:=false;
+		tipo:='figPoint';
 	end;
+	
 	
 procedure inicializarPieza (var P:pieza);
 //inicializa la matriz 4x4 de la pieza en 0
@@ -148,15 +159,15 @@ var figura:integer;
 	begin
 		figura:=(random(9)+1); //hay un total de 9 figuras
 		case figura of
-			1:figL(P.posValida,P.rotacion);
-			2:figInvertedL(P.posValida,P.rotacion);
-			3:figPlus(P.posValida,P.rotacion);
-			4:figI(P.posValida,P.rotacion);
-			5:figT(P.posValida,P.rotacion);
-			6:figS(P.posValida,P.rotacion);
-			7:figInvertedS(P.posValida,P.rotacion);
-			8:figQuad(P.posValida,P.rotacion);
-			9:figPoint(P.posValida,P.rotacion);
+			1:figL (P.posValida,P.rotacion,P.tipo);
+			2:figInvertedL (P.posValida,P.rotacion,P.tipo);
+			3:figPlus (P.posValida,P.rotacion,P.tipo);
+			4:figI (P.posValida,P.rotacion,P.tipo);
+			5:figT (P.posValida,P.rotacion,P.tipo);
+			6:figS (P.posValida,P.rotacion,P.tipo);
+			7:figInvertedS (P.posValida,P.rotacion,P.tipo);
+			8:figQuad (P.posValida,P.rotacion,P.tipo);
+			9:figPoint (P.posValida,P.rotacion,P.tipo);
 		end;
 	end;
 	
