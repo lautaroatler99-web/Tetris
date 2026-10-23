@@ -110,12 +110,12 @@ procedure generarInterSigPieza();
 		setcolor(lightgray);		//color del marco
 		
 		SetLineStyle(SolidLn, 0, ThickWidth);	//la linea es mas gruesa
-		rectangle(interfaz.pixelX(-6)+15,		//dibujo el marco del score
+		rectangle(interfaz.pixelX(-6)+15,		//dibujo el marco
 		interfaz.pixelY(3),
 		interfaz.PixelX(0),
 		interfaz.pixelY(6));
 		
-		setcolor(5);		//color de 'Score'
+		setcolor(5);		//color de 'Next'
 		
 		outTextXY( (interfaz.pixelX(-4)-10),(interfaz.pixelY(8)+15),'Next');	//sig pieza
 		
@@ -131,7 +131,7 @@ procedure generarInterfazPuntuacion ();
 //crea el marco visual de la puntuacion
 	begin
 		settextstyle(0,0,3); //tamaño de letra
-			
+
 		setcolor(lightgray);		//color del marco
 		
 		SetLineStyle(SolidLn, 0, ThickWidth);	//la linea es mas gruesa
