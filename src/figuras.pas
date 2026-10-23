@@ -151,13 +151,14 @@ procedure inicializarPieza (var P:pieza);
 				P.posBloque[i,j].Y:=0;
 			end;
 		P.rotacion:=false;
+		P.tipo:='';
 	end;
 
 procedure elegirFigura(var P:pieza);
 //elije aleatoriamente la pieza
 var figura:integer;
 	begin
-		figura:=(random(9)+1); //hay un total de 9 figuras
+		figura:=4;//(random(9)+1); //hay un total de 9 figuras
 		case figura of
 			1:figL (P.posValida,P.rotacion,P.tipo);
 			2:figInvertedL (P.posValida,P.rotacion,P.tipo);
