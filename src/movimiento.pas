@@ -484,6 +484,7 @@ var i,j,min,max:integer;
 			interfaz.sumarPuntos();}
 	end;
 
+
 function permitirMovimiento(key:char;P:figuras.pieza; Grilla:interfaz.grilla; bordeMovimiento:limitesPieza):boolean;
 	//funcion que verifica si el movimiento esta permitido dependiendo de la tecla presionada
 	var ok:boolean;i:integer;
@@ -502,6 +503,40 @@ function permitirMovimiento(key:char;P:figuras.pieza; Grilla:interfaz.grilla; bo
 		permitirMovimiento:=ok;
 	end;
 	
+	
+procedure caidaRepentina(key:char;var P:figuras.pieza;var Grilla:interfaz.Grilla; bordeMovimiento:limitesPieza);
+//registra la caida progresiva y permite la interaccion de otros movimientos en el transcurso. Una vez que toca piso,
+//permite un ultimo movimiento
+var ok:boolean;
+	begin
+		ok:=puedeBajar(P,Grilla,bordeMovimiento);
+		
+		while (ok) do begin
+			delay(75);
+			if keypressed then begin		//se puede mover mientras cae
+				key:=readkey;
+				if (key=#27) then			//pausa en caida
+					interfaz.pausa()
+				else
+				if (permitirMovimiento(key,p,grilla,bordeMovimiento)) then//comprueba si la accion puede realizarse dependiendo de la tecla presionada
+					moverPieza(key,P,Grilla);
+			end
+			else begin					//si no se presiona nada, sigue cayendo
+				key:='s';
+				moverPieza(key,P,Grilla);
+			end;
+			ok:=puedeBajar(P,Grilla,bordeMovimiento);
+		end;
+		
+		delay(300);	//ultima chance para mover la pieza antes de confirmar posicion
+		if (keypressed) then begin
+			key:=readkey;
+			if (permitirMovimiento(key,p,grilla,bordeMovimiento)) then
+				moverPieza(key,P,Grilla);
+		end;
+	end;
+
+
 procedure registrarAccion (var key:char; var P:figuras.pieza; var Grilla:interfaz.grilla);
 //procedimiento que interpreta la accion realizada
 	var
@@ -524,21 +559,11 @@ procedure registrarAccion (var key:char; var P:figuras.pieza; var Grilla:interfa
 		else if (key='s') then begin 
 			ok:=puedeBajar(P,Grilla,bordeMovimiento);
 			while (ok) do begin
-				delay(75);
+				caidaRepentina(key, P, Grilla, bordeMovimiento);	//la pieza cae hasta tocar piso
 				
-				if keypressed then begin		//se puede mover mientras cae
-					key:=readkey;
-					if (key=#27) then			//pausa en caida
-						interfaz.pausa()
-					else
-					if (permitirMovimiento(key,p,grilla,bordeMovimiento)) then//comprueba si la accion puede realizarse dependiendo de la tecla presionada
-						moverPieza(key,P,Grilla);
-				end
-				else begin					//si no se presiona nada, sigue cayendo
-					key:='s';
-					moverPieza(key,P,Grilla);
-				end;
-				ok:=puedeBajar(P,Grilla,bordeMovimiento);
+				if (puedeBajar(P,Grilla,bordeMovimiento)) then			//si despues de moverse sigue en el aire, continua cayendo
+					caidaRepentina(key, P, Grilla, bordeMovimiento);	//
+				ok:=puedeBajar(P,Grilla,bordeMovimiento);				//el bucle permite multiples caidas
 			end;
 			confirmarLinea(P,Grilla);			//reviso si la caida de la pieza logro completar una linea
 			figuras.crearFigura(P, Grilla);		//la pieza llego al final y se crea una nueva
@@ -570,4 +595,3 @@ procedure registrarAccion (var key:char; var P:figuras.pieza; var Grilla:interfa
 			interfaz.pausa();
 	end;
 end.
-
