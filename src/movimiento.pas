@@ -39,7 +39,7 @@ limitesPieza=array[1..4] of integer; //vector que retrata el lateral de la pieza
 //							10: EXTRA: La figura I es un caso especial y se tiene que rotar manual
 
 
-procedure registrarAccion (var key:char;var P:figuras.pieza;var Grilla:interfaz.grilla;nivel:integer;var score:integer);
+procedure registrarAccion (var key:char;var P:figuras.pieza;var Grilla:interfaz.grilla;nivel:integer;var score:longint);
 procedure moverPieza(var key:char;var P:figuras.pieza;var grilla:interfaz.grilla);
 
 
@@ -447,7 +447,7 @@ procedure borrarLinea (var G:interfaz.grilla;PosInicio:integer);
 	end;
 
 
-procedure confirmarLinea (P:figuras.pieza;var G:interfaz.grilla;nivel:integer;var score:integer);
+procedure confirmarLinea (P:figuras.pieza;var G:interfaz.grilla;nivel:integer;var score:longint);
 	//recorre las 4 lineas donde la pieza quedo estatica y verifica si estan completas para proceder a borrar
 var i,j,min,max:integer;
 	ok:boolean;
@@ -537,7 +537,7 @@ var ok:boolean;
 	end;
 
 
-procedure registrarAccion (var key:char; var P:figuras.pieza; var Grilla:interfaz.grilla;nivel:integer;var score:integer);
+procedure registrarAccion (var key:char; var P:figuras.pieza; var Grilla:interfaz.grilla;nivel:integer;var score:longint);
 //procedimiento que interpreta la accion realizada
 	var
 	ok:boolean;

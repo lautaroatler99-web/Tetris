@@ -34,7 +34,7 @@ function pixelY(Y:integer):integer;
 procedure iniciarJuego(var G:grilla);
 
 procedure pausa ();
-procedure sumarPuntos (lineasCompletadas,nivel:integer;var score:integer);
+procedure sumarPuntos (lineasCompletadas,nivel:integer;var score:longint);
 
 
 
@@ -148,7 +148,6 @@ procedure borrarPuntuacion (Xscore,Yscore,score:integer);
 	var alto,ancho,numeros:word;
 	begin
 		setFillStyle(solidFill, black);		//cambio relleno de bloques
-		setColor(red);					//cambio color
 		numeros:=12345;			//variable con el ancho de 5 digitos
 		ancho := Xscore + TextWidth(IntToStr(numeros));	//se toman las dimensiones que ocuparian esos 5 digitos
 		alto := Yscore + TextHeight(IntToStr(numeros));	//
@@ -170,14 +169,17 @@ var digitos:integer;
 	end;
 		
 
-procedure actualizarPuntuacion (score:integer);
+procedure actualizarPuntuacion (score:longint);
 //acutaliza la puntuacion del tablero
 var Xscore,Yscore,color,digitos,i:integer;
 	colorRelleno:FillSettingsType;
 	ceros:string;
 	begin
+		if (score>=100000) then	//medida de seguridad para evitar overflow
+			score:=score-100000;
+		
 		color:=getColor;				//guardo el color actual (PUSH)
-		getFillSettings(colorRelleno); 	//guardo la configuracion de getfill actual (PUSH)
+		getFillSettings(colorRelleno); 	//guardo la configuracion de fillstyle actual (PUSH)
 		
 		Xscore:=(interfaz.pixelX(-5)+10);				//posicion de puntuacion
 		Yscore:=(interfaz.pixelY(5));					//
@@ -195,7 +197,7 @@ var Xscore,Yscore,color,digitos,i:integer;
 		setColor(color); 	//restauro el color	(POP)
 		SetFillStyle(colorRelleno.Pattern, colorRelleno.Color);// restauro la configuracion de fillStyle (POP)
 	end;
-
+///////////////////////////////////////////////////
 	
 procedure generarInterfazPuntuacion ();
 //crea el marco visual de la puntuacion
@@ -234,7 +236,7 @@ var Xscore,Xrectangle,
 	end;
 
 
-procedure sumarPuntos (lineasCompletadas,nivel:integer;var score:integer);
+procedure sumarPuntos (lineasCompletadas,nivel:integer;var score:longint);
 	begin
 		case lineasCompletadas of
 			1: score:=score+100*nivel;
