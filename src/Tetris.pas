@@ -10,7 +10,8 @@ var
 	P:figuras.pieza;
 	Grilla:interfaz.grilla;
 	tiempo, tiempoActual: longint;
-	score,nivel:integer;
+	nivel:integer;
+	score:longint;
 begin					//tablero principal 10*20;
 	randomize;
 	ok:=true; //ok:=menu.inicio();
