@@ -10,10 +10,12 @@ var
 	P:figuras.pieza;
 	Grilla:interfaz.grilla;
 	tiempo, tiempoActual: longint;
+	score,nivel:integer;
 begin					//tablero principal 10*20;
 	randomize;
-	ok:=true;
-	//ok:=menu.inicio();
+	ok:=true; //ok:=menu.inicio();
+	score:=0;
+	nivel:=1;
 	
 	if (ok) then begin
 		interfaz.iniciarJuego(Grilla);
@@ -24,11 +26,11 @@ begin					//tablero principal 10*20;
 			if keypressed then begin
 				key:=readkey;
 				if ( (key='a') or (key='d') or (key='s') or (key='w') or (key=#27) ) then
-					movimiento.registrarAccion(key,P,grilla);
+					movimiento.registrarAccion(key,P,grilla,nivel,score);
 			end;
 			if ((tiempoActual - tiempo) >= 1000) then begin
 				key:='t';				//se Elvia t para que caiga por segundo
-				movimiento.registrarAccion(key, P, grilla);
+				movimiento.registrarAccion(key, P, grilla,nivel,score);
 				tiempo:=tiempoActual;
 			end;
 		until (ok=false);

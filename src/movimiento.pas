@@ -16,7 +16,7 @@ limitesPieza=array[1..4] of integer; //vector que retrata el lateral de la pieza
 //							3: Localizar la posicion actual de la pieza.
 //							4: Localizar esa posicion en la grilla
 //							5: Consultar si el desplazamiento en la grilla esta permitido (grilla X=+1/-1 en FALSE)
-//							
+//
 //
 //pasos para borrar una linea:
 //							1: Registrar las coordenadas una vez la pieza quede fija (toca piso)
@@ -39,7 +39,7 @@ limitesPieza=array[1..4] of integer; //vector que retrata el lateral de la pieza
 //							10: EXTRA: La figura I es un caso especial y se tiene que rotar manual
 
 
-procedure registrarAccion (var key:char;var P:figuras.pieza;var Grilla:interfaz.grilla);
+procedure registrarAccion (var key:char;var P:figuras.pieza;var Grilla:interfaz.grilla;nivel:integer;var score:integer);
 procedure moverPieza(var key:char;var P:figuras.pieza;var grilla:interfaz.grilla);
 
 
@@ -59,7 +59,7 @@ var color:integer;colorRelleno:FillSettingsType;
 		figuras.dibujarPieza(P,Grilla);	//piso el bloque actual
 		
 		SetColor(color);	//devuelvo el color anterior
-		SetFillStyle(colorRelleno.Pattern, colorRelleno.Color); //devuelvo la configuracion de getfill anterior
+		SetFillStyle(colorRelleno.Pattern, colorRelleno.Color); //devuelvo la configuracion de fillStyle anterior
 	end;
 
 	
@@ -447,7 +447,7 @@ procedure borrarLinea (var G:interfaz.grilla;PosInicio:integer);
 	end;
 
 
-procedure confirmarLinea (P:figuras.pieza;var G:interfaz.grilla);
+procedure confirmarLinea (P:figuras.pieza;var G:interfaz.grilla;nivel:integer;var score:integer);
 	//recorre las 4 lineas donde la pieza quedo estatica y verifica si estan completas para proceder a borrar
 var i,j,min,max:integer;
 	ok:boolean;
@@ -480,8 +480,8 @@ var i,j,min,max:integer;
 			else
 				i:=i-1;
 		end;
-		{if (lineasCompletadas>0) then
-			interfaz.sumarPuntos();}
+		if (lineasCompletadas>0) then
+			interfaz.sumarPuntos(lineasCompletadas,nivel,score);
 	end;
 
 
@@ -537,7 +537,7 @@ var ok:boolean;
 	end;
 
 
-procedure registrarAccion (var key:char; var P:figuras.pieza; var Grilla:interfaz.grilla);
+procedure registrarAccion (var key:char; var P:figuras.pieza; var Grilla:interfaz.grilla;nivel:integer;var score:integer);
 //procedimiento que interpreta la accion realizada
 	var
 	ok:boolean;
@@ -565,7 +565,7 @@ procedure registrarAccion (var key:char; var P:figuras.pieza; var Grilla:interfa
 					caidaRepentina(key, P, Grilla, bordeMovimiento);	//
 				ok:=puedeBajar(P,Grilla,bordeMovimiento);				//el bucle permite multiples caidas
 			end;
-			confirmarLinea(P,Grilla);			//reviso si la caida de la pieza logro completar una linea
+			confirmarLinea(P,Grilla,nivel,score);			//reviso si la caida de la pieza logro completar una linea
 			figuras.crearFigura(P, Grilla);		//la pieza llego al final y se crea una nueva
 		end
 		
@@ -584,7 +584,7 @@ procedure registrarAccion (var key:char; var P:figuras.pieza; var Grilla:interfa
 				moverPieza(key,P,Grilla);
 			end
 			else begin
-				confirmarLinea(P,Grilla);
+				confirmarLinea(P,Grilla,nivel,score);
 				figuras.crearFigura(P, Grilla);	//ya no puede desplazarse y procede a crear una figura nueva
 			end;
 		end

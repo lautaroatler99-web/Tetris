@@ -5,7 +5,7 @@ interface
 
 //las dimensiones del cuadro es X=800-1000, Y=200-800, tamaño=30;
 
-uses graph,crt;
+uses graph,crt,SysUtils;
 
 type
 	arrayGrilla=array [1..22,1..12] of boolean;
@@ -34,6 +34,9 @@ function pixelY(Y:integer):integer;
 procedure iniciarJuego(var G:grilla);
 
 procedure pausa ();
+procedure sumarPuntos (lineasCompletadas,nivel:integer;var score:integer);
+
+
 
 implementation
 
@@ -127,26 +130,119 @@ procedure generarInterSigPieza();
 	end;
 
 
+
+//////////////////////
+// Pasos para actualizar la puntuacion:
+//										1. Se guardan los colores actuales.
+//										2. Se calculan las dimensiones del bloque de la puntuacion  (unidad absoluta).
+//										3. Se borran los pixeles de la puntuacion actual.
+//										4. Se calculan los digitos que tiene la puntuacion.
+//										5. Se le agregan tantos 0 como necesite para completar los 5 digitos totales.
+//										6. Se imprime la nueva puntuacion actualizada.
+//										7. Se restauran los colores anteriores.
+
+
+
+procedure borrarPuntuacion (Xscore,Yscore,score:integer);
+//crea un bloque negro que tapa los pixeles de la puntuacion
+	var alto,ancho,numeros:word;
+	begin
+		setFillStyle(solidFill, black);		//cambio relleno de bloques
+		setColor(red);					//cambio color
+		numeros:=12345;			//variable con el ancho de 5 digitos
+		ancho := Xscore + TextWidth(IntToStr(numeros));	//se toman las dimensiones que ocuparian esos 5 digitos
+		alto := Yscore + TextHeight(IntToStr(numeros));	//
+		
+		bar(Xscore,Yscore,ancho,alto); //borro todos los pixeles de la puntuacion
+	end;
+
+
+function digitosScore (score:integer):integer;
+//cuenta la cantidad de digitos que tiene SCORE
+var digitos:integer;
+	begin
+		digitos:=0;
+		repeat
+			digitos:=digitos+1;
+			score:=score div 10;
+		until (score=0);
+		digitosScore:=digitos;
+	end;
+		
+
+procedure actualizarPuntuacion (score:integer);
+//acutaliza la puntuacion del tablero
+var Xscore,Yscore,color,digitos,i:integer;
+	colorRelleno:FillSettingsType;
+	ceros:string;
+	begin
+		color:=getColor;				//guardo el color actual (PUSH)
+		getFillSettings(colorRelleno); 	//guardo la configuracion de getfill actual (PUSH)
+		
+		Xscore:=(interfaz.pixelX(-5)+10);				//posicion de puntuacion
+		Yscore:=(interfaz.pixelY(5));					//
+		
+		borrarPuntuacion(Xscore,Yscore,score);								//borro los pixeles de puntuacion anterior
+		
+		digitos:=digitosScore(score);
+		ceros:='';
+		for i:=1 to 5-digitos do		//la puntuacion tiene 5 digitos. Se agregan
+			ceros:=ceros+'0';			//tantos 0 como la diferencia entre digitos y SCORE
+				
+		setColor(white);		//color de puntuacion (blanco)
+		outTextXY( Xscore, Yscore, ceros+IntToStr(score));		//piso el valor de la puntuacion
+		
+		setColor(color); 	//restauro el color	(POP)
+		SetFillStyle(colorRelleno.Pattern, colorRelleno.Color);// restauro la configuracion de fillStyle (POP)
+	end;
+
+	
 procedure generarInterfazPuntuacion ();
 //crea el marco visual de la puntuacion
+var Xscore,Xrectangle,
+	Yscore,Yrectangle,
+	Xtext,
+	Ytext:integer;
 	begin
 		settextstyle(0,0,3); //tamaño de letra
-
 		setcolor(lightgray);		//color del marco
-		
 		SetLineStyle(SolidLn, 0, ThickWidth);	//la linea es mas gruesa
-		rectangle(interfaz.pixelX(-6)+15,		//dibujo el marco del score
-		interfaz.pixelY(8),
-		interfaz.PixelX(0),
-		interfaz.pixelY(11));
+		
+		Xscore:=(interfaz.pixelX(-5)+10);				//posicion de puntuacion
+		Yscore:=(interfaz.pixelY(5));					//
+		
+		Xrectangle:=(interfaz.pixelX(-6)+15);			//posicion rectangulo
+		Yrectangle:=(interfaz.pixelY(8));				//
+		
+		Xtext:=(interfaz.pixelX(-4)-20);				//posicion de 'score'
+		Ytext:=(interfaz.pixelY(3)+15);					//
+		
+		rectangle(Xrectangle,		//dibujo el marco del score
+				Yrectangle,
+				interfaz.PixelX(0),
+				interfaz.pixelY(11));
 		
 		setcolor(lightblue);		//color de 'Score'
-		outTextXY( (interfaz.pixelX(-4)-20),(interfaz.pixelY(3)+15),'Score');	//posicion relativa al marco de 'Score'
+		
+		outTextXY( Xtext,Ytext,'Score');	//posicion relativa al marco de 'Score'
 		
 		setColor(white);
 		
-		outTextXY( (interfaz.pixelX(-5)+10),(interfaz.pixelY(5)),'00000');	//posicion de puntuacion
+		outTextXY( Xscore,Yscore,'00000');	//posicion de puntuacion
+		
 		SetLineStyle(SolidLn, 0, NormWidth);	//pongo el grosor de la linea a la normalidad
+	end;
+
+
+procedure sumarPuntos (lineasCompletadas,nivel:integer;var score:integer);
+	begin
+		case lineasCompletadas of
+			1: score:=score+100*nivel;
+			2: score:=score+200*nivel;
+			3: score:=score+500*nivel;
+			4: score:=score+800*nivel;
+		end;
+		actualizarPuntuacion (score);
 	end;
 
 procedure pausa ();
