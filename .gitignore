@@ -1,4 +1,5 @@
-# Archivos a ignorar
+/archivos a ignorar
+>>>>>>> puntuacion
 
 .vscode/
 *.o
