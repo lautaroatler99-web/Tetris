@@ -35,14 +35,17 @@ procedure iniciarJuego(var G:grilla);
 
 procedure pausa ();
 procedure sumarPuntos (lineasCompletadas,nivel:integer;var score:longint);
-
+procedure actualizarNivel (lineasTotales:integer;var nivel:integer);
 
 
 implementation
 
 const 
 tam=30;	//tamaño absoluto de cada bloque
-	
+
+
+////////////////////////////////////////////// FUNCIONES DE UBICACION //////////////////////////////////////////////
+
 function grillaX ():integer;
 	//divide el total de los pixeles del eje X en bloques de 30,
 	// y lo divide a la mitad retornarno su centro de pantalla.
@@ -68,13 +71,62 @@ var inicioBordeX:integer;
 
 
 function pixelY(Y:integer):integer;
-	//transforma las coordenadas Y en la ubicacion exacto del pixel a partir del borde
+	//transforma las coordenadas Y en la ubicacion exacto del pixel en relacion a la grilal jugable.
 var inicioBordeY:integer;
 	begin
 		inicioBordeY:=11;	//el largo es de 22, entonces la mitad me deja en el centro
 		pixelY:=grillaY()*tam - (inicioBordeY*tam) + Y*tam;	//con grillaY() me ubico en el centro, al restarle 11*30, me quedo exactamente en el borde del eje Y
 	end;													//y al sumar (Y*tam) me desplazo la cantidad de pixeles a la ubicacion de la coordenada (Y=coordenada entre 1..22)
 
+
+procedure posicionNivel(var ancho,alto:integer);
+//ubicacion exacta de la parte del nivel
+	begin
+		ancho := interfaz.pixelX(-5)-15;	//posicion del texto
+		alto := interfaz.pixelY(6)+20;		//
+	end;
+		
+////////////////////////////////////////////////////////////////////////////////////////////	
+
+
+// Pasos para actualizar la puntuacion:
+//										1. Se guardan los colores actuales.
+//										2. Se calculan las dimensiones del bloque de la puntuacion  (unidad absoluta).
+//										3. Se borran los pixeles de la puntuacion actual.
+//										4. Se calculan los digitos que tiene la puntuacion.
+//										5. Se le agregan tantos 0 como necesite para completar los 5 digitos totales.
+//										6. Se imprime la nueva puntuacion actualizada.
+//										7. Se restauran los colores anteriores.
+//
+////////////////////////////////////////////////////////////////////////////////////////////
+// Pasos para actualizar el nivel:
+//									1. Se dividen las lineas totales por 10 y se suma 1.
+//									2. Se compara el resultado con el nivel actual
+//									3. 
+//
+
+// Cada nivel consta de 10 lineas:
+//									nivel 1: 0-9 lineas
+//									nivel 2: 10-19 lineas
+//									nivel 3: 20-29 lineas
+//											...
+//									nivel X: (lineasTotales div 10) +1
+////////////////////////////////////////////////////////////////////////////////////////////
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+////////////////////////////////////////////////////////////////////////////////////////////		
+		
+		
+		
+////////////////////////////////////////////// MARCO //////////////////////////////////////////////
 
 procedure crearMarco(var G:grilla;x0,y0:integer);
 //procedimiento que se encarga de crear el marco decorativo que rodea el juego
@@ -99,11 +151,59 @@ var fila,columna,x,y:integer;
 	end;
 
 
-procedure generarInterfazNivel();
+////////////////////////////////////////////// NIVEL //////////////////////////////////////////////
+
+procedure modificarNivel (nivel:integer);
+//borra los pixeles del numero de nivel y los reemplaza por el nivel actualizado
+	var ancho,alto,numeros:integer; texto:string;
 	begin
+		texto:='Nivel:';
+		setFillStyle(solidFill, black);		//cambio relleno de bloques
+		numeros:=55;			//variable con el ancho de 2 digitos
+		posicionNivel(ancho,alto);
+		
+		bar(		//borro los numeros del nivel
+					ancho+ textWidth(texto), 	//X posicionada en el inicio de los numeros de nivel
+					alto,						//Y posicionada en el inicio de los numeros de nivel
+					(ancho+ textWidth (texto)+ textWidth(intToStr(numeros))), 		//X+ desplazamiento X del tamaño que ocupan 2 digitos
+					alto+ textheight(intToStr(numeros)) ); 							//Y+      ''
 	
+		setColor(white);		//color de los digitos del nivel (blanco)
+		
+		outTextXY( ancho + textWidth(texto), alto, intToStr(nivel));		//piso los digitos del nivel
+		
 	end;
 	
+procedure generarInterfazNivel();
+//crea la interfaz relacionada al nivel
+var ancho,alto:integer;texto:string;
+	begin
+		texto:='Nivel:';
+		posicionNivel(ancho,alto);
+		outTextXY (ancho,alto,texto);
+		outTextXY(ancho + textWidth(texto),alto,'1');
+	end;
+
+
+procedure actualizarNivel (lineasTotales:integer;var nivel:integer);
+//actualiza el valor de nivel  si se cumplen las condiciones
+var color:integer; colorRelleno:FillSettingsType;
+	begin
+		if ( ((lineasTotales div 10) +1 ) >nivel) then begin
+			nivel:=nivel+1; //actualizo el nivel
+			
+			color:=getColor;				//guardo el color actual (PUSH)
+			getFillSettings(colorRelleno); 	//guardo la configuracion de fillstyle actual (PUSH)
+		
+			modificarNivel(nivel);	//borro y actualiza los pixeles del nivel actual
+
+			setColor(color); 	//restauro el color	(POP)
+			SetFillStyle(colorRelleno.Pattern, colorRelleno.Color);// restauro la configuracion de fillStyle (POP)
+		end;
+	end;
+
+
+////////////////////////////////////////////// SIG PIEZA ////////////////////////////////////////////// 
 	
 procedure generarInterSigPieza();
 //crea la parte visual del nivel
@@ -129,18 +229,7 @@ procedure generarInterSigPieza();
 		SetLineStyle(SolidLn, 0, NormWidth);	//pongo el grosor de la linea a la normalidad
 	end;
 
-
-
-//////////////////////
-// Pasos para actualizar la puntuacion:
-//										1. Se guardan los colores actuales.
-//										2. Se calculan las dimensiones del bloque de la puntuacion  (unidad absoluta).
-//										3. Se borran los pixeles de la puntuacion actual.
-//										4. Se calculan los digitos que tiene la puntuacion.
-//										5. Se le agregan tantos 0 como necesite para completar los 5 digitos totales.
-//										6. Se imprime la nueva puntuacion actualizada.
-//										7. Se restauran los colores anteriores.
-
+////////////////////////////////////////////// PUNTUACION //////////////////////////////////////////////
 
 
 procedure borrarPuntuacion (Xscore,Yscore,score:integer);
@@ -167,7 +256,7 @@ var digitos:integer;
 		until (score=0);
 		digitosScore:=digitos;
 	end;
-		
+
 
 procedure actualizarPuntuacion (score:longint);
 //acutaliza la puntuacion del tablero
@@ -184,7 +273,7 @@ var Xscore,Yscore,color,digitos,i:integer;
 		Xscore:=(interfaz.pixelX(-5)+10);				//posicion de puntuacion
 		Yscore:=(interfaz.pixelY(5));					//
 		
-		borrarPuntuacion(Xscore,Yscore,score);								//borro los pixeles de puntuacion anterior
+		borrarPuntuacion(Xscore,Yscore,score);			//borro los pixeles de puntuacion anterior
 		
 		digitos:=digitosScore(score);
 		ceros:='';
@@ -197,7 +286,7 @@ var Xscore,Yscore,color,digitos,i:integer;
 		setColor(color); 	//restauro el color	(POP)
 		SetFillStyle(colorRelleno.Pattern, colorRelleno.Color);// restauro la configuracion de fillStyle (POP)
 	end;
-///////////////////////////////////////////////////
+
 	
 procedure generarInterfazPuntuacion ();
 //crea el marco visual de la puntuacion
@@ -235,8 +324,10 @@ var Xscore,Xrectangle,
 		SetLineStyle(SolidLn, 0, NormWidth);	//pongo el grosor de la linea a la normalidad
 	end;
 
+////////////////////////////////////////////// FUNCIONES PUBLICAS //////////////////////////////////////////////
 
 procedure sumarPuntos (lineasCompletadas,nivel:integer;var score:longint);
+//suma puntos dependiendo de cuantas lineas consecutivas se hayan completados
 	begin
 		case lineasCompletadas of
 			1: score:=score+100*nivel;
@@ -246,6 +337,7 @@ procedure sumarPuntos (lineasCompletadas,nivel:integer;var score:longint);
 		end;
 		actualizarPuntuacion (score);
 	end;
+
 
 procedure pausa ();
 //pausa el juego momentaneamente hasta que se presione #27 (ESC)
