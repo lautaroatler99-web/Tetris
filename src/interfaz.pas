@@ -7,6 +7,8 @@ interface
 
 uses graph,crt,SysUtils;
 
+const fondo=0; //color del fondo del juego
+
 type
 	arrayGrilla=array [1..22,1..12] of boolean;
 	
@@ -36,7 +38,7 @@ procedure iniciarJuego(var G:grilla);
 procedure pausa ();
 procedure sumarPuntos (lineasCompletadas,nivel:integer;var score:longint);
 procedure actualizarNivel (lineasTotales:integer;var nivel:integer);
-
+procedure actualizarLineas(lineasTotales:integer);
 
 implementation
 
@@ -135,6 +137,7 @@ procedure crearMarco(var G:grilla;x0,y0:integer);
 var fila,columna,x,y:integer;
 	begin
 		SetFillStyle(SolidFill,8);		//color gris
+		setColor(white);
 		for fila:=1 to 22 do
 			for columna:=1 to 12 do begin
 				G.pos[fila,columna].X:=x0 + (columna-1)*tam; //ubicacion en pixeles
@@ -146,7 +149,11 @@ var fila,columna,x,y:integer;
 					bar(x+1,y+1,x+tam-1,y+tam-1); 	//creo el cuadrado relleno y el borde con un pixel de distancia
 					rectangle(x+1,y+1,x+tam-1,y+tam-1); //para que no se borren o superpongan sus marcos
 				end
-				else G.panel[fila,columna]:=false;
+				else begin
+					G.panel[fila,columna]:=false;
+					G.color[fila,columna].colorRelleno:=fondo;
+					G.color[fila,columna].colorBorde:=fondo;
+				end;
 			end;
 	end;
 
@@ -158,7 +165,7 @@ procedure modificarNivel (nivel:integer);
 	var ancho,alto,numeros:integer; texto:string;
 	begin
 		texto:='Nivel:';
-		setFillStyle(solidFill, black);		//cambio relleno de bloques
+		setFillStyle(solidFill, fondo);		//cambio relleno de bloques
 		numeros:=55;			//variable con el ancho de 2 digitos
 		posicionNivel(ancho,alto);
 		
@@ -236,7 +243,7 @@ procedure borrarPuntuacion (Xscore,Yscore,score:integer);
 //crea un bloque negro que tapa los pixeles de la puntuacion
 	var alto,ancho,numeros:word;
 	begin
-		setFillStyle(solidFill, black);		//cambio relleno de bloques
+		setFillStyle(solidFill, fondo);		//cambio relleno de bloques
 		numeros:=12345;			//variable con el ancho de 5 digitos
 		ancho := Xscore + TextWidth(IntToStr(numeros));	//se toman las dimensiones que ocuparian esos 5 digitos
 		alto := Yscore + TextHeight(IntToStr(numeros));	//
@@ -330,6 +337,68 @@ var Xscore,Xrectangle,
 		SetLineStyle(SolidLn, 0, NormWidth);	//pongo el grosor de la linea a la normalidad
 	end;
 
+////////////////////////////////////////////// INTERFAZ LINEA //////////////////////////////////////////////
+
+procedure posicionLineas(var X:integer; var Y:integer);
+//devuelve las posiciones XY del contador de lineas
+	begin
+		X:=pixelX(14);
+		Y:=pixelY(4);
+	end;
+	
+procedure borrarPixelLineas(X,Y:integer;text:string);
+//borra el contador actual de las lineas
+var numeros:integer;
+	begin
+		numeros:=9999; //representacion del espacio fisico de 4 digitos
+		setFillStyle(solidFill, fondo);		//cambio relleno de bloques
+		
+		rectangle ( X+ textWidth(text), 			//ubicacion del inicio de los numeros
+		 Y+textHeight(text),				//
+		 X+ textWidth(text) + numeros,
+		 Y+ textHeight(text) + numeros
+		 );
+	end;
+
+
+procedure actualizarLineas(lineasTotales:integer);
+//actualiza el contador de las lineas totales
+	var X,Y,color:integer;text:string;
+	colorRelleno:FillSettingsType;
+	begin
+		
+		color:=getColor;				//guardo el color actual (PUSH)
+		getFillSettings(colorRelleno); 	//guardo la configuracion de fillstyle actual (PUSH)
+		
+		text:='Lineas:';
+		posicionLineas(X,Y);
+		borrarPixelLineas(X,Y,text);
+		
+		setColor(white);
+		
+		outTextXY( X+textWidth(text),Y ,intToStr(lineasTotales) );	//imprimo el valor actualizado
+		
+		setColor(color); 	//restauro el color	(POP)
+		SetFillStyle(colorRelleno.Pattern, colorRelleno.Color);// restauro la configuracion de fillStyle (POP)
+	end;
+	
+procedure generarInterfazLinea();
+	var X,Y:integer;
+	begin
+		posicionLineas(X,Y);
+		outTextXY(X,Y, 'Lineas:0');
+	end;
+
+
+////////////////////////////////////////////// ////////////////////////////////////////////// 
+
+
+procedure IniciarFondo();
+	begin
+		SetFillStyle(SolidFill, fondo);
+		bar (0,0,getMaxX(),getMaxY);
+	end;
+
 ////////////////////////////////////////////// FUNCIONES PUBLICAS //////////////////////////////////////////////
 
 procedure sumarPuntos (lineasCompletadas,nivel:integer;var score:longint);
@@ -371,10 +440,11 @@ var gd,gm:integer;	//puestos para la inferfaz grafica
 		y0:=pixelY(1);	//
 		
 		/////////////	INTERFAZ	/////////////
-		
+		iniciarFondo();
 		crearMarco(G,x0,y0);			//crea el borde de cuadros
 		generarInterfazPuntuacion();	//puntacion
 		generarInterSigPieza();			//sig pieza
 		generarInterfazNivel(); 		//nivel
+		generarInterfazLinea();			//lineas totales
 	end;
 end.

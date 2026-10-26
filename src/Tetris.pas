@@ -35,7 +35,7 @@ begin					//tablero principal 10*20;
 				
 			if (intervalo<100) then		//ajusto el intervalo para que no quede en 0 o negativo
 				intervalo:=100;
-				
+						
 			if ((tiempoActual - tiempo) >= intervalo) then begin
 				key:='t';				//se envia t para que caiga por segundo
 				movimiento.registrarAccion(key, P, grilla,nivel,score,lineasTotales);

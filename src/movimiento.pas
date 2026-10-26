@@ -53,8 +53,8 @@ var color:integer;colorRelleno:FillSettingsType;
 		color:=getColor; //guardo el color actual
 		getFillSettings(colorRelleno); //la configuracion de getfill actual
 		
-		setFillStyle(solidFill, black);	//cambio relleno de bloques
-		SetColor(black);	//cambio color
+		setFillStyle(solidFill, fondo);	//cambio relleno de bloques
+		SetColor(fondo);	//cambio color
 		
 		figuras.dibujarPieza(P,Grilla);	//piso el bloque actual
 		
@@ -424,10 +424,10 @@ procedure borrarLinea (var G:interfaz.grilla;PosInicio:integer);
 		tam:=30;
 		for i:=PosInicio downto 2 do
 			for j:=2 to 11 do begin
-				if (i=2) then begin					//si i=2 quiere decir que esta en la primera fila.
-					G.panel[i,j]:=false;			//como no puede copiar valores de arriba, desaparece,
-					G.color[i,j].colorRelleno:=0;	//sus celdas se liberan y se pintan cuadros negros
-					G.color[i,j].colorBorde:=0;		//
+				if (i=2) then begin						//si i=2 quiere decir que esta en la primera fila.
+					G.panel[i,j]:=false;				//como no puede copiar valores de arriba, desaparece,
+					G.color[i,j].colorRelleno:=fondo;	//sus celdas se liberan y se pintan cuadros
+					G.color[i,j].colorBorde:=fondo;		//del color del fondo
 				end
 				else begin
 					G.panel[i,j]:=G.panel[i-1,j]; 							//
@@ -440,7 +440,6 @@ procedure borrarLinea (var G:interfaz.grilla;PosInicio:integer);
 				
 				X:=G.pos[i,j].X;			//apunto las coordenadas para
 				Y:=G.pos[i,j].Y;			//empezar a dibujar el cuadro
-				
 				bar(x+1,y+1,x+tam-1,y+tam-1); //creo el cuadrado relleno con un pixel de distancia
 				rectangle(x+1,y+1,x+tam-1,y+tam-1); //borde del cuadrado con un pixel de distancia
 			end;
@@ -481,9 +480,10 @@ var i,j,min,max:integer;
 				i:=i-1;
 		end;
 		if (lineasCompletadas>0) then begin
-			interfaz.sumarPuntos(lineasCompletadas,nivel,score);
 			lineasTotales:=lineasTotales+lineasCompletadas;
+			interfaz.sumarPuntos(lineasCompletadas,nivel,score);
 			interfaz.actualizarNivel(lineasTotales,nivel);
+			interfaz.actualizarLineas(lineasTotales);
 		end;
 	end;
 
