@@ -162,18 +162,18 @@ var fila,columna,x,y:integer;
 
 procedure modificarNivel (nivel:integer);
 //borra los pixeles del numero de nivel y los reemplaza por el nivel actualizado
-	var ancho,alto,numeros:integer; texto:string;
+	var ancho,alto:integer; numeros,texto:string;
 	begin
 		texto:='Nivel:';
 		setFillStyle(solidFill, fondo);		//cambio relleno de bloques
-		numeros:=55;			//variable con el ancho de 2 digitos
+		numeros:='55';			//variable con el ancho de 2 digitos
 		posicionNivel(ancho,alto);
 		
 		bar(		//borro los numeros del nivel
 					ancho+ textWidth(texto), 	//X posicionada en el inicio de los numeros de nivel
 					alto,						//Y posicionada en el inicio de los numeros de nivel
-					(ancho+ textWidth (texto)+ textWidth(intToStr(numeros))), 		//X+ desplazamiento X del tamaño que ocupan 2 digitos
-					alto+ textheight(intToStr(numeros)) ); 							//Y+      ''
+					(ancho+ textWidth (texto)+ textWidth(numeros)), 		//X+ desplazamiento X del tamaño que ocupan 2 digitos
+					alto+ textheight(numeros) ); 							//Y+      ''
 	
 		setColor(white);		//color de los digitos del nivel (blanco)
 		
@@ -241,12 +241,12 @@ procedure generarInterSigPieza();
 
 procedure borrarPuntuacion (Xscore,Yscore,score:integer);
 //crea un bloque negro que tapa los pixeles de la puntuacion
-	var alto,ancho,numeros:word;
+	var alto,ancho:integer; numeros:string;
 	begin
 		setFillStyle(solidFill, fondo);		//cambio relleno de bloques
-		numeros:=12345;			//variable con el ancho de 5 digitos
-		ancho := Xscore + TextWidth(IntToStr(numeros));	//se toman las dimensiones que ocuparian esos 5 digitos
-		alto := Yscore + TextHeight(IntToStr(numeros));	//
+		numeros:='12345';			//variable con el ancho de 5 digitos
+		ancho := Xscore + TextWidth(numeros);	//se toman las dimensiones que ocuparian esos 5 digitos
+		alto := Yscore + TextHeight(numeros);	//
 		
 		bar(Xscore,Yscore,ancho,alto); //borro todos los pixeles de la puntuacion
 	end;
