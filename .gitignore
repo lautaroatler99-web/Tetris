@@ -1,6 +1,9 @@
 /archivos a ignorar
 
 .vscode/
+<<<<<<< HEAD
 .o
 .ppu
 .exe
+=======
+>>>>>>> c887cde (chore: actualice gitignore)
