@@ -30,7 +30,7 @@ begin					//tablero principal 10*20;
 					movimiento.registrarAccion(key,P,grilla,nivel,score);
 			end;
 			if ((tiempoActual - tiempo) >= 1000) then begin
-				key:='t';				//se Elvia t para que caiga por segundo
+				key:='t';				//se envia t para que caiga por segundo
 				movimiento.registrarAccion(key, P, grilla,nivel,score);
 				tiempo:=tiempoActual;
 			end;
