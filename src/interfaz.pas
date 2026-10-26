@@ -80,7 +80,7 @@ var inicioBordeY:integer;
 
 
 procedure posicionNivel(var ancho,alto:integer);
-//ubicacion exacta de la parte del nivel
+//devuelve las coordenadas XY del nivel
 	begin
 		ancho := interfaz.pixelX(-5)-15;	//posicion del texto
 		alto := interfaz.pixelY(6)+20;		//
@@ -258,6 +258,14 @@ var digitos:integer;
 	end;
 
 
+procedure posicionScore (var Xscore:integer;var Yscore:integer);
+//devuelve las coordenadas XY del score
+	begin
+		Xscore:=(interfaz.pixelX(-5)+10);				//posicion de puntuacion
+		Yscore:=(interfaz.pixelY(5));					//
+	end;
+	
+	
 procedure actualizarPuntuacion (score:longint);
 //acutaliza la puntuacion del tablero
 var Xscore,Yscore,color,digitos,i:integer;
@@ -270,8 +278,7 @@ var Xscore,Yscore,color,digitos,i:integer;
 		color:=getColor;				//guardo el color actual (PUSH)
 		getFillSettings(colorRelleno); 	//guardo la configuracion de fillstyle actual (PUSH)
 		
-		Xscore:=(interfaz.pixelX(-5)+10);				//posicion de puntuacion
-		Yscore:=(interfaz.pixelY(5));					//
+		posicionScore(Xscore,Yscore);
 		
 		borrarPuntuacion(Xscore,Yscore,score);			//borro los pixeles de puntuacion anterior
 		
@@ -299,8 +306,7 @@ var Xscore,Xrectangle,
 		setcolor(lightgray);		//color del marco
 		SetLineStyle(SolidLn, 0, ThickWidth);	//la linea es mas gruesa
 		
-		Xscore:=(interfaz.pixelX(-5)+10);				//posicion de puntuacion
-		Yscore:=(interfaz.pixelY(5));					//
+		posicionSCore(Xscore,Yscore);
 		
 		Xrectangle:=(interfaz.pixelX(-6)+15);			//posicion rectangulo
 		Yrectangle:=(interfaz.pixelY(8));				//
