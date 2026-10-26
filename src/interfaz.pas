@@ -348,15 +348,14 @@ procedure posicionLineas(var X:integer; var Y:integer);
 	
 procedure borrarPixelLineas(X,Y:integer;text:string);
 //borra el contador actual de las lineas
-var numeros:integer;
+var numeros:string;
 	begin
-		numeros:=9999; //representacion del espacio fisico de 4 digitos
+		numeros:='9999'; //representacion del espacio fisico de 4 digitos
 		setFillStyle(solidFill, fondo);		//cambio relleno de bloques
-		
-		rectangle ( X+ textWidth(text), 			//ubicacion del inicio de los numeros
-		 Y+textHeight(text),				//
-		 X+ textWidth(text) + numeros,
-		 Y+ textHeight(text) + numeros
+		bar ( X+ textWidth(text), 			//ubicacion del inicio de los numeros
+		 Y,				//
+		 X+ textWidth(text) + textWidth(numeros),
+		 Y+ textHeight(numeros)
 		 );
 	end;
 
