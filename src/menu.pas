@@ -3,9 +3,14 @@ unit menu;
 interface
 
 function inicio():boolean;
-
+procedure terminar();
 implementation
 
+procedure terminar();
+	begin
+		writeln('se termino el game');
+	end;
+	
 function opcion (var op:integer):boolean;
 	begin
 		readln(op);
