@@ -25,6 +25,7 @@ function opcion (var op:integer):boolean;
 		end;
 		
 	end;
+	
 function inicio():boolean;
 var op:integer;
 	begin

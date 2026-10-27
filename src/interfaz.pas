@@ -15,7 +15,7 @@ procedure sumarPuntos (lineasCompletadas,nivel:integer;var score:longint);
 procedure actualizarNivel (lineasTotales:integer;var nivel:integer);
 procedure actualizarLineas(lineasTotales:integer);
 procedure panelPiezaSiguiente(SP:figuras.pieza);
-
+procedure actualizarContBloques (var blocks:integer);
 implementation
 
 const 
@@ -431,6 +431,56 @@ var X,Y:integer;
 	end;
 
 
+////////////////////////////////////////////// BLOQUES ////////////////////////////////////////////// 
+
+
+procedure posicionBloques (var X:integer; var Y:integer);
+	begin
+		X:=pixelX(14);
+		Y:=pixelY(5)+10;
+	end;
+
+
+procedure borrarContBloques (X,Y:integer;text:string);
+var numeros:string;
+	begin
+		numeros:='9999';
+		setFillStyle(solidFill, fondo);
+		bar (X+textWidth(text),Y,X+textWidth(text)+textWidth(numeros),Y+textHeight(numeros));
+	end;
+
+
+procedure actualizarContBloques (var blocks:integer);
+var X,Y,color:integer;colorRelleno:FillSettingsType;
+	text:string;
+	begin
+		blocks:=blocks+1;
+		color:=getColor;				//guardo el color actual (PUSH)
+		getFillSettings(colorRelleno); 	//guardo la configuracion de fillstyle actual (PUSH)
+		
+		text:='Blocks:';
+		posicionBloques(X,Y);
+		
+		borrarContBloques(X,Y,text);
+		setColor(white);
+		outTextXY(X+textWidth(text),Y,intToStr(blocks) );
+		
+		setColor(color); 	//restauro el color	(POP)
+		SetFillStyle(colorRelleno.Pattern, colorRelleno.Color);// restauro la configuracion de fillStyle (POP)
+		
+	end;
+
+	
+procedure interfazContBloques (blocks:integer);
+var X,Y:integer;
+
+	begin
+		posicionBloques(X,Y);
+		setColor(white);
+		outTextXY(X,Y, 'Blocks:0');
+	end;
+
+
 //////////////////////////////////////////////////////////////////////////////////////////// 
 
 
@@ -461,7 +511,7 @@ procedure borrarCuadroPausa (X1,Y1:integer;var imagen:pointer;tamanio:integer);
 		FreeMem(imagen, tamanio);			//libero la memoria
 	end;
 	
-
+	
 ////////////////////////////////////////////// FUNCIONES PUBLICAS //////////////////////////////////////////////
 
 
@@ -533,6 +583,7 @@ var gd,gm:integer;	//puestos para la inferfaz grafica
 		generarInterfazNivel(); 		//nivel
 		generarInterfazLinea();			//lineas totales
 		generarInterfazControles();		//muestra los controles
+		interfazContBloques(0);		//muestra cant bloques
 	end;
 
 end.

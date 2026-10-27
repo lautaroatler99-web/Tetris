@@ -14,6 +14,7 @@ var
 	score:longint;
 	intervalo:integer;
 	gameOver:boolean;
+	blocks:integer;
 begin					//tablero principal 10*20;
 	randomize;
 	ok:=true; //ok:=menu.inicio();
@@ -28,14 +29,15 @@ begin					//tablero principal 10*20;
 		figuras.crearPiezaInicial(P,Grilla,gameOver);	//se crea la primera pieza en la pos central superior
 		panelPiezaSiguiente(SP);		//creo la pieza siguiente en la interfaz
 		tiempo:=getTickCount64;
-		
+		blocks:=0;
 		while (not (gameOver)) do begin
 			tiempoActual:=GetTickCount64;
 			if keypressed then begin
 				key:=readkey;
 				key:=lowerCase(key);
-				if ( (key='a') or (key='d') or (key='s') or (key='w') or (key=#27{esc}) ) then
-					movimiento.registrarAccion(key,P,SP,grilla,nivel,score,lineasTotales,gameOver);
+				if ( (key='a') or (key='d') or (key='s') or (key='w') or (key=#27{esc}) ) then begin
+					movimiento.registrarAccion(key,P,SP,grilla,nivel,score,lineasTotales,blocks,gameOver);
+				end;
 			end;
 			
 			intervalo:=1100- nivel*100;    //al principio queda en 1000ms
@@ -45,7 +47,7 @@ begin					//tablero principal 10*20;
 						
 			if ((tiempoActual - tiempo) >= intervalo) then begin
 				key:='t';				//se envia t para que caiga por segundo
-				movimiento.registrarAccion(key, P, SP, Grilla,nivel,score,lineasTotales,gameOver);
+				movimiento.registrarAccion(key, P, SP, Grilla,nivel,score,lineasTotales,blocks,gameOver);
 				tiempo:=tiempoActual;
 			end;
 		end;
