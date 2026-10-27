@@ -94,7 +94,7 @@ procedure modificarNivel (nivel:integer);
 //borra los pixeles del numero de nivel y los reemplaza por el nivel actualizado
 	var ancho,alto:integer; numeros,texto:string;
 	begin
-		texto:='Nivel:';
+		texto:='Level:';
 		setFillStyle(solidFill, fondo);		//cambio relleno de bloques
 		numeros:='55';			//variable con el ancho de 2 digitos
 		posicionNivel(ancho,alto);
@@ -115,7 +115,7 @@ procedure generarInterfazNivel();
 //crea la interfaz relacionada al nivel
 var ancho,alto:integer;texto:string;
 	begin
-		texto:='Nivel:';
+		texto:='Level:';
 		posicionNivel(ancho,alto);
 		outTextXY (ancho,alto,texto);
 		outTextXY(ancho + textWidth(texto),alto,'1');
@@ -167,7 +167,7 @@ var i,j,tam:integer;
 			for i:=1 to max do 
 				for j:=1 to max do 
 					if (SP.posValida[i,j]) then begin
-						X:=(posX+tam)-15+ (i-1) *tam;	//el -15 es para centrar unos pixeles a la izquierda
+						X:=(posX+tam)-12+ (i-1) *tam;	//el -12 es para centrar unos pixeles a la izquierda
 						Y:=posY-tam+ (j-1) *tam;
 	
 						bar(x+1,y+1,x+tam-1,y+tam-1);		//imprimo el bloque
@@ -387,7 +387,7 @@ procedure actualizarLineas(lineasTotales:integer);
 		color:=getColor;				//guardo el color actual (PUSH)
 		getFillSettings(colorRelleno); 	//guardo la configuracion de fillstyle actual (PUSH)
 		
-		text:='Lineas:';
+		text:='Lines:';
 		posicionLineas(X,Y);
 		borrarPixelLineas(X,Y,text);
 		
@@ -403,7 +403,7 @@ procedure generarInterfazLinea();
 	var X,Y:integer;
 	begin
 		posicionLineas(X,Y);
-		outTextXY(X,Y, 'Lineas:0');
+		outTextXY(X,Y, 'Lines:0');
 	end;
 
 
