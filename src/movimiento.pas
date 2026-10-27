@@ -39,7 +39,7 @@ limitesPieza=array[1..4] of integer; //vector que retrata el lateral de la pieza
 //							10: EXTRA: La figura I es un caso especial y se tiene que rotar manual
 
 
-procedure registrarAccion (var key:char;var P:figuras.pieza;var SP:figuras.pieza;var Grilla:tablero.grilla;var nivel:integer;var score:longint;var lineasTotales:integer);
+procedure registrarAccion (var key:char;var P:figuras.pieza;var SP:figuras.pieza;var Grilla:tablero.grilla;var nivel:integer;var score:longint;var lineasTotales:integer;var gameOver:boolean);
 procedure moverPieza(var key:char;var P:figuras.pieza;var grilla:tablero.grilla);
 
 
@@ -539,6 +539,21 @@ var ok:boolean;
 		end;
 	end;
 
+procedure finalizarCaida(var P:figuras.pieza;
+						 var SP:figuras.pieza;
+						 var Grilla:tablero.grilla;
+						 var nivel:integer;
+						 var score:longint;
+						 var lineasTotales:integer;
+						 var gameOver:boolean);
+	//se encarga de todo el proceso una vez la pieza se haya asentado
+	begin
+		confirmarLinea(P,Grilla,nivel,score,lineasTotales);			//reviso si la caida de la pieza logro completar una linea
+		P:=SP;										//la pieza siguiente pasa a ser la actual
+		figuras.elegirPieza(SP);					//se elije la siguiente pieza
+		interfaz.panelPiezaSiguiente(SP);
+		figuras.crearPiezaInicial(P, Grilla,gameOver);			//la pieza llego al final y se crea una nueva
+	end;
 
 procedure registrarAccion 	(var key:char;
 							var P:figuras.pieza;
@@ -546,8 +561,8 @@ procedure registrarAccion 	(var key:char;
 							var Grilla:tablero.grilla;
 							var nivel:integer;
 							var score:longint;
-							var lineasTotales:integer
-							);
+							var lineasTotales:integer;
+							var gameOver:boolean);
 //procedimiento que interpreta la accion realizada
 	var
 	ok:boolean;
@@ -575,11 +590,7 @@ procedure registrarAccion 	(var key:char;
 					caidaRepentina(key, P, Grilla, bordeMovimiento);	//
 				ok:=puedeBajar(P,Grilla,bordeMovimiento);				//el bucle permite multiples caidas
 			end;
-			confirmarLinea(P,Grilla,nivel,score,lineasTotales);			//reviso si la caida de la pieza logro completar una linea
-			P:=SP;	//la pieza siguiente pasa a ser la actual
-			figuras.elegirPieza(SP);			//se elije la siguiente pieza
-			interfaz.panelPiezaSiguiente(SP);
-			figuras.crearPiezaInicial(P, Grilla);		//la pieza llego al final y se crea una nueva
+			finalizarCaida(P,SP,Grilla,nivel,score,lineasTotales,gameOver);
 		end
 		
 		//////// rotar //////////////
@@ -596,13 +607,8 @@ procedure registrarAccion 	(var key:char;
 				delay(75);
 				moverPieza(key,P,Grilla);
 			end
-			else begin
-				confirmarLinea(P,Grilla,nivel,score,lineasTotales);
-				P:=SP;	//la pieza siguiente pasa a ser la actual
-				figuras.elegirPieza(SP);	//se elije la nueva pieza siguiente
-				interfaz.panelPiezaSiguiente(SP);	//se imprime en la interfaz
-				figuras.crearPiezaInicial(P, Grilla);	//ya no puede desplazarse y procede a crear una figura nueva
-			end;
+			else
+				finalizarCaida(P,SP,Grilla,nivel,score,lineasTotales,gameOver);
 		end
 		
 		//////// pausa //////////////
