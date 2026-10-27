@@ -5,7 +5,7 @@ interface
 
 //las dimensiones del cuadro es X=800-1000, Y=200-800, tamaño=30;
 
-uses graph,crt,SysUtils,figuras,tablero;
+uses graph,wincrt,SysUtils,figuras,tablero;
 	
 
 procedure iniciarJuego(var G:grilla);
@@ -422,12 +422,16 @@ var X,Y:integer;
 	begin
 		posicionControles(X,Y);
 		
-		setColor(white);
-		outTextXY (X,Y,'Left: A');
-		outTextXY (X,Y+40,'Right: D');
-		outTextXY (X,Y+80,'Drop: S');
-		outTextXY (X,Y+120,'Rotate: W');
-		outTextXY (X,Y+160,'pause: ESC');
+		setColor(lightBlue);
+		outTextXY (X,Y,'A: Left');
+		setColor(lightRed);
+		outTextXY (X,Y+40,'D: Right');
+		setColor(lightGreen);
+		outTextXY (X,Y+80,'S: Drop');
+		setColor(lightMagenta);
+		outTextXY (X,Y+120,'W: Rotate');
+		setColor(lightCyan);
+		outTextXY (X,Y+160,'ESC: pause');
 	end;
 
 

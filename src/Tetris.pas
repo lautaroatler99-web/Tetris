@@ -1,6 +1,6 @@
 program tetris;
 
-uses graph,crt,SysUtils,interfaz,figuras,menu,movimiento,tablero;
+uses graph,wincrt,SysUtils,interfaz,figuras,menu,movimiento,tablero;
 const
 max=4;
 

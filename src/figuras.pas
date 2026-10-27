@@ -2,7 +2,7 @@ unit figuras;
 
 interface
 
-uses graph,crt,tablero;
+uses graph,wincrt,tablero;
 
 
 const

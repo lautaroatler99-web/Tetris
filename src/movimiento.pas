@@ -3,7 +3,7 @@ unit movimiento;
 
 interface
 
-uses graph,crt,tablero,figuras,interfaz;
+uses graph,wincrt,tablero,figuras,interfaz;
 
 type
 
