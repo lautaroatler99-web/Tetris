@@ -208,7 +208,7 @@ var X,Y:integer;
 	begin
 		posicionSigPieza(X,Y);
 		setFillStyle(solidFill, fondo);
-		bar(X+15,Y,X+(30*4)+15,Y+30*3);
+		bar(X+15,Y,X+(30*4)+20,Y+30*3);
 	end;
 	
 procedure panelPiezaSiguiente(SP:figuras.pieza);
@@ -430,19 +430,62 @@ procedure sumarPuntos (lineasCompletadas,nivel:integer;var score:longint);
 		actualizarPuntuacion (score);
 	end;
 
+procedure cuadroPausa(X1,X2,Y1,Y2,tamanio:integer;var imagen:pointer);
+//creo un bloque en pantalla que avisa de la pausa
+	begin
+		GetMem(imagen, tamanio);	//reservo en memoria el espacio del cuadro
+		GetImage(X1, Y1, X2, Y2, imagen^);	//capturo la iamgen dentro de ese cuadrado
+		
+		setColor(11); 		//color del texto
+		setFillStyle(solidFill, 3);	//fondo del cuadro
+		
+		bar (X1,Y1,X2,Y2);	//creo un bloque
+		outTextXY (X1+15,Y1+15,'- pause -');	//centro el texto
+	end;
 
+
+procedure borrarCuadroPausa (X1,Y1:integer;var imagen:pointer;tamanio:integer);
+//deshace el cuadro previamente puesto
+	begin
+		PutImage(X1, Y1, imagen^, NormalPut);	//pongo la imagen guardada
+		FreeMem(imagen, tamanio);			//libero la memoria
+	end;
+	
+	
 procedure pausa ();
 //pausa el juego momentaneamente hasta que se presione #27 (ESC)
 	var ok:boolean; key:char;
+	imagen:pointer;
+	X1,X2,Y1,Y2:integer;
+	tamanio:integer;
+	color:integer;
+	colorRelleno:FillSettingsType;
+	
 	begin;
+		color:=getColor;				//guardo el color actual (PUSH)
+		getFillSettings(colorRelleno); 	//guardo la configuracion de fillstyle actual (PUSH)
+		
+		X1:=tablero.PixelX(3);		//
+		Y1:=tablero.pixelY(9)+15;	//coordenadas del cuadro
+		X2:=tablero.pixelX(11);		//
+		Y2:=tablero.pixelY(11)+15;	//
+
+		tamanio:=imageSize(X1,Y1,X2,Y2);	//guardo el tamaño que ocupa el cuadro
+		
 		ok:=true;
+		
+		cuadroPausa(X1,X2,Y1,Y2,tamanio,imagen);
+		
 		while (ok) do begin
-			key:=readkey;
-			if (key=#27) then
+			key:=readkey;			//al usar readkey, detiene el bucle y gasta menos procesamiento
+			if (key=#27) then		//que dejarlo en bucle verificando si se presiono alguna tecla
 				ok:=false;
 			end;
+		borrarCuadroPausa(X1,Y1,imagen,tamanio);
+		setColor(color); 	//restauro el color	(POP)
+		SetFillStyle(colorRelleno.Pattern, colorRelleno.Color);// restauro la configuracion de fillStyle (POP)
 	end;
-
+	
 	
 procedure iniciarJuego(var G:grilla);	//la grilla total consta de 12*22 (10*20 jugable + el marco)
 	//inicializa el modo grafico, configura el color y los demas componentes.
