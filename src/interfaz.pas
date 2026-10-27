@@ -14,6 +14,7 @@ procedure pausa ();
 procedure sumarPuntos (lineasCompletadas,nivel:integer;var score:longint);
 procedure actualizarNivel (lineasTotales:integer;var nivel:integer);
 procedure actualizarLineas(lineasTotales:integer);
+procedure panelPiezaSiguiente(SP:figuras.pieza);
 
 implementation
 
@@ -40,36 +41,23 @@ procedure posicionNivel(var ancho,alto:integer);
 //										6. Se imprime la nueva puntuacion actualizada.
 //										7. Se restauran los colores anteriores.
 //
-////////////////////////////////////////////////////////////////////////////////////////////
 // Pasos para actualizar el nivel:
-//									1. Se guardan los colores actuales.
-//									2. Se dividen las lineas totales por 10 y se suma 1.
-//									3. Se compara el resultado con el nivel actual.
-//									4. Se borra la puntuacion actual.
-//									5. Se imprime la puntuacion actual.
-//									6. Se restauran los colores anteriores.
+//										1. Se guardan los colores actuales.
+//										2. Se dividen las lineas totales por 10 y se suma 1.
+//										3. Se compara el resultado con el nivel actual.
+//										4. Se borra la puntuacion actual.
+//										5. Se imprime la puntuacion actual.
+//										6. Se restauran los colores anteriores.
 //
 // Cada nivel consta de 10 lineas:
-//									nivel 1: 0-9 lineas
-//									nivel 2: 10-19 lineas
-//									nivel 3: 20-29 lineas
+//										nivel 1: 0-9 lineas
+//										nivel 2: 10-19 lineas
+//										nivel 3: 20-29 lineas
 //											...
-//									nivel X: (lineasTotales div 10) +1
-////////////////////////////////////////////////////////////////////////////////////////////
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
+//										nivel X: (lineasTotales div 10) +1
 ////////////////////////////////////////////////////////////////////////////////////////////		
-		
-		
-		
+
+
 ////////////////////////////////////////////// MARCO //////////////////////////////////////////////
 
 procedure crearMarco(var G:grilla;x0,y0:integer);
@@ -154,35 +142,116 @@ var color:integer; colorRelleno:FillSettingsType;
 
 ////////////////////////////////////////////// SIG PIEZA ////////////////////////////////////////////// 
 
-
-procedure dibujarSigPieza (SP:figuras.pieza);
+procedure posicionSigPieza(var X:integer; var Y:integer);
+//calcula la posicion de la siguiente pieza
 	begin
+		X:=tablero.pixelX(-5)-10;
+		Y:=tablero.pixelY(10)-10;
+	end;
+	
+	
+procedure dibujarSigPieza (SP:figuras.pieza);
+//dibuja la siguiente pieza en la pantalla
+var i,j,tam:integer;
+	X,Y:integer;
+	posX,posY:integer;
+	begin
+		tam:=30;//tamaño de cada cuadro
+		SetFillStyle(SolidFill,SP.colorRelleno);
+		setcolor(SP.colorBorde);
 		
+		posicionSigPieza(posX,posY);	//consigo el pixel para dibujar las piezas
+		
+		//si es figura en I, lo dibujo acostado para centrarlo
+		if (SP.tipo='figI') then begin
+			for i:=1 to max do 
+				for j:=1 to max do 
+					if (SP.posValida[i,j]) then begin
+						X:=(posX+tam)-15+ (i-1) *tam;	//el -15 es para centrar unos pixeles a la izquierda
+						Y:=posY-tam+ (j-1) *tam;
+	
+						bar(x+1,y+1,x+tam-1,y+tam-1);		//imprimo el bloque
+						rectangle(x+1,y+1,x+tam-1,y+tam-1); //imprimo su borde
+					end;
+		end
+		//si es cuadrado, lo dibujo un poco mas a la derecha para centrarlo
+		else if (SP.tipo='figQuad') then begin
+			for i:=1 to max do 
+				for j:=1 to max do 
+					if (SP.posValida[i,j]) then begin
+						X:=posX + 15 + (j-1) *tam;		//lo centro un poco a la derecha
+						Y:=posY+ (i-1) * tam+15;			//y un poco abajo
+	
+						bar(x+1,y+1,x+tam-1,y+tam-1);		//imprimo el bloque
+						rectangle(x+1,y+1,x+tam-1,y+tam-1); //imprimo su borde
+					end;
+		end
+		
+		//si es cualquier otra pieza:
+		else begin
+			for i:=1 to max do 
+				for j:=1 to max do 
+					if (SP.posValida[i,j]) then begin
+						X:=posX+ (j-1) *tam;
+						Y:=posY+ (i-1) *tam;
+	
+						bar(x+1,y+1,x+tam-1,y+tam-1);		//imprimo el bloque
+						rectangle(x+1,y+1,x+tam-1,y+tam-1); //imprimo su borde
+					end;
+		end
 	end;
 
 
+procedure borrarSigPieza();
+//crea un bloque negro borrando los pixeles de la sig pieza
+var X,Y:integer;
+	begin
+		posicionSigPieza(X,Y);
+		setFillStyle(solidFill, fondo);
+		bar(X+15,Y,X+(30*4)+15,Y+30*3);
+	end;
+	
+procedure panelPiezaSiguiente(SP:figuras.pieza);
+	//procedimiento base para limpiar pantalla y redibujar la pieza siguiente
+	var	color:integer;
+		colorRelleno:FillSettingsType;
+
+	begin
+		color:=getColor;				//guardo el color actual (PUSH)
+		getFillSettings(colorRelleno); 	//guardo la configuracion de fillstyle actual (PUSH)
+		
+		borrarSigPieza();
+		dibujarSigPieza(SP);
+		
+		setColor(color); 	//restauro el color	(POP)
+		SetFillStyle(colorRelleno.Pattern, colorRelleno.Color);// restauro la configuracion de fillStyle (POP)
+	end;
+
+
+
 procedure generarInterfazSigPieza();
-//inicia la parte visual de la siguiente pieza
+//inicia la parte visual de la siguiente pieza por primerae vez
 	begin
 		settextstyle(0,0,3); //tamaño de letra
 			
 		setcolor(lightgray);		//color del marco
 		
 		SetLineStyle(SolidLn, 0, ThickWidth);	//la linea es mas gruesa
-		rectangle(tablero.pixelX(-6)+15,		//dibujo el marco
-		tablero.pixelY(3),
-		tablero.PixelX(0),
-		tablero.pixelY(6));
 		
+		rectangle(
+		tablero.pixelX(-6)+15,		//dibujo el marco
+		tablero.pixelY(8),
+		tablero.PixelX(0),
+		tablero.pixelY(13)+15);
+
 		setcolor(5);		//color de 'Next'
 		
 		outTextXY( (tablero.pixelX(-4)-10),(tablero.pixelY(8)+15),'Next');	//sig pieza
 		
 		setColor(white);
-		
-		outTextXY( (tablero.pixelX(-5)+10),(tablero.pixelY(10)),'00000');
 
 		SetLineStyle(SolidLn, 0, NormWidth);	//pongo el grosor de la linea a la normalidad
+		
 	end;
 
 ////////////////////////////////////////////// PUNTUACION //////////////////////////////////////////////
@@ -263,9 +332,9 @@ var Xscore,Xrectangle,
 		SetLineStyle(SolidLn, 0, ThickWidth);	//la linea es mas gruesa
 		
 		posicionSCore(Xscore,Yscore);
-		
+
 		Xrectangle:=(tablero.pixelX(-6)+15);			//posicion rectangulo
-		Yrectangle:=(tablero.pixelY(8));				//
+		Yrectangle:=(tablero.pixelY(3));				//
 		
 		Xtext:=(tablero.pixelX(-4)-20);				//posicion de 'score'
 		Ytext:=(tablero.pixelY(3)+15);					//
@@ -273,7 +342,7 @@ var Xscore,Xrectangle,
 		rectangle(Xrectangle,		//dibujo el marco del score
 				Yrectangle,
 				tablero.PixelX(0),
-				tablero.pixelY(11));
+				tablero.pixelY(6));
 		
 		setcolor(lightblue);		//color de 'Score'
 		
@@ -395,4 +464,5 @@ var gd,gm:integer;	//puestos para la inferfaz grafica
 		generarInterfazNivel(); 		//nivel
 		generarInterfazLinea();			//lineas totales
 	end;
+
 end.

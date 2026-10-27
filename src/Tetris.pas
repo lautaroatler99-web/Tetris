@@ -17,13 +17,14 @@ begin					//tablero principal 10*20;
 	randomize;
 	ok:=true; //ok:=menu.inicio();
 	score:=0;
-	nivel:=10;
+	nivel:=1;
 	lineasTotales:=0;
 	if (ok) then begin
 		interfaz.iniciarJuego(Grilla);
 		figuras.elegirPieza(P);			//se elije la primera pieza
 		figuras.elegirPieza(SP);		//se elije la segunda pieza
-		figuras.crearPiezaInicial(P,Grilla);	//se crea la primera pieza
+		figuras.crearPiezaInicial(P,Grilla);	//se crea la primera pieza en la pos central superior
+		panelPiezaSiguiente(SP);		//creo la pieza siguiente en la interfaz
 		tiempo:=getTickCount64;
 		repeat
 			tiempoActual:=GetTickCount64;

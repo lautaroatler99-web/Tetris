@@ -39,7 +39,7 @@ limitesPieza=array[1..4] of integer; //vector que retrata el lateral de la pieza
 //							10: EXTRA: La figura I es un caso especial y se tiene que rotar manual
 
 
-procedure registrarAccion (var key:char;var P:figuras.pieza;var SP:figuras.pieza;var Grilla:tablero.grilla;nivel:integer;var score:longint;var lineasTotales:integer);
+procedure registrarAccion (var key:char;var P:figuras.pieza;var SP:figuras.pieza;var Grilla:tablero.grilla;var nivel:integer;var score:longint;var lineasTotales:integer);
 procedure moverPieza(var key:char;var P:figuras.pieza;var grilla:tablero.grilla);
 
 
@@ -446,7 +446,7 @@ procedure borrarLinea (var G:tablero.grilla;PosInicio:integer);
 	end;
 
 
-procedure confirmarLinea (P:figuras.pieza;var G:tablero.grilla;nivel:integer;var score:longint;var lineasTotales:integer);
+procedure confirmarLinea (P:figuras.pieza;var G:tablero.grilla;var nivel:integer; var score:longint;var lineasTotales:integer);
 	//recorre las 4 lineas donde la pieza quedo estatica y verifica si estan completas para proceder a borrar
 var i,j,min,max:integer;
 	ok:boolean;
@@ -544,7 +544,7 @@ procedure registrarAccion 	(var key:char;
 							var P:figuras.pieza;
 							var SP:figuras.pieza;
 							var Grilla:tablero.grilla;
-							nivel:integer;
+							var nivel:integer;
 							var score:longint;
 							var lineasTotales:integer
 							);
@@ -578,6 +578,7 @@ procedure registrarAccion 	(var key:char;
 			confirmarLinea(P,Grilla,nivel,score,lineasTotales);			//reviso si la caida de la pieza logro completar una linea
 			P:=SP;	//la pieza siguiente pasa a ser la actual
 			figuras.elegirPieza(SP);			//se elije la siguiente pieza
+			interfaz.panelPiezaSiguiente(SP);
 			figuras.crearPiezaInicial(P, Grilla);		//la pieza llego al final y se crea una nueva
 		end
 		
@@ -598,7 +599,8 @@ procedure registrarAccion 	(var key:char;
 			else begin
 				confirmarLinea(P,Grilla,nivel,score,lineasTotales);
 				P:=SP;	//la pieza siguiente pasa a ser la actual
-				figuras.elegirPieza(SP);
+				figuras.elegirPieza(SP);	//se elije la nueva pieza siguiente
+				interfaz.panelPiezaSiguiente(SP);	//se imprime en la interfaz
 				figuras.crearPiezaInicial(P, Grilla);	//ya no puede desplazarse y procede a crear una figura nueva
 			end;
 		end

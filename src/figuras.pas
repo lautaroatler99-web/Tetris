@@ -247,4 +247,5 @@ procedure elegirPieza(var P:pieza);
 		elegirfigura(P);
 		elegirColor(P);
 	end;
+	
 end.
