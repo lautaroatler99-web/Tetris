@@ -3,7 +3,7 @@ unit movimiento;
 
 interface
 
-uses graph,crt,interfaz,figuras;
+uses graph,crt,tablero,figuras,interfaz;
 
 type
 
@@ -39,13 +39,13 @@ limitesPieza=array[1..4] of integer; //vector que retrata el lateral de la pieza
 //							10: EXTRA: La figura I es un caso especial y se tiene que rotar manual
 
 
-procedure registrarAccion (var key:char;var P:figuras.pieza;var Grilla:interfaz.grilla;nivel:integer;var score:longint;var lineasTotales:integer);
-procedure moverPieza(var key:char;var P:figuras.pieza;var grilla:interfaz.grilla);
+procedure registrarAccion (var key:char;var P:figuras.pieza;var SP:figuras.pieza;var Grilla:tablero.grilla;nivel:integer;var score:longint;var lineasTotales:integer);
+procedure moverPieza(var key:char;var P:figuras.pieza;var grilla:tablero.grilla);
 
 
 implementation
 
-procedure borrarPiezaColor (var P:figuras.pieza;var Grilla:interfaz.grilla);
+procedure borrarPiezaColor (var P:figuras.pieza;var Grilla:tablero.grilla);
 	//pinta la pieza actual de negro simulando que desaparece
 var color:integer;colorRelleno:FillSettingsType;
 	
@@ -63,7 +63,7 @@ var color:integer;colorRelleno:FillSettingsType;
 	end;
 
 	
-procedure marcarCeldas (var P:figuras.pieza;var Grilla:interfaz.grilla);
+procedure marcarCeldas (var P:figuras.pieza;var Grilla:tablero.grilla);
 		//procedimiento que se encarga de marcas las celdas de la pieza en la copia de la grilla
 		//y mantiene los colores
 	var i,j,fila,columna:integer;
@@ -81,7 +81,7 @@ procedure marcarCeldas (var P:figuras.pieza;var Grilla:interfaz.grilla);
 	end;
 
 
-procedure borrarCeldas (var P:pieza;var Grilla:interfaz.grilla);
+procedure borrarCeldas (var P:pieza;var Grilla:tablero.grilla);
 		//procedimiento que se encarga de desmarcar las celdas de la pieza en la grilla
 	var i,j:integer;
 	begin
@@ -95,7 +95,7 @@ procedure borrarCeldas (var P:pieza;var Grilla:interfaz.grilla);
 	end;
 
 
-function comprobarRotacion (rotada:figuras.pieza; copiaGrilla:interfaz.grilla):boolean;
+function comprobarRotacion (rotada:figuras.pieza; copiaGrilla:tablero.grilla):boolean;
 	//comprueba que todas las celdas de la pieza rotada tengan espacio en la grilla
 	var ok:boolean;
 		i,j:integer;
@@ -220,11 +220,11 @@ function limites (rotada:figuras.pieza):boolean;
 	end;
 	
 	
-function rotacion (var P:figuras.pieza;var grilla:interfaz.grilla):boolean;	
+function rotacion (var P:figuras.pieza;var grilla:tablero.grilla):boolean;	
 		//se encarga de toda la rotacion y finalmente, si se puede, rota la pieza		
 	var ok,limite,puedeRotar:boolean;
 		R:figuras.pieza;
-		copiaGrilla:interfaz.grilla;		//copia de la grilla
+		copiaGrilla:tablero.grilla;		//copia de la grilla
 	begin
 		ok:=false;
 		
@@ -280,7 +280,7 @@ var i,j:integer;
 function lados(
 						key:char;
 						P:figuras.pieza;
-						grilla:interfaz.grilla;
+						grilla:tablero.grilla;
 						bordeMovimiento:limitesPieza
 						):boolean;
 // Comprueba en la grilla si hay espacio disponible para realizar el desplazamiento izquierda/derecha
@@ -334,7 +334,7 @@ fila,columna,i:integer; ok:boolean;
 	
 function puedeBajar(
 					P:figuras.pieza;
-					Grilla:interfaz.grilla;
+					Grilla:tablero.grilla;
 					bordeMovimiento:limitesPieza
 					):boolean;	
 //comprueba si las celdas debajo de la pieza estan disponibles para bajar
@@ -364,7 +364,7 @@ var fila,columna,i,j:integer; ok:boolean;
 	end;
 
 
-procedure moverPieza(var key:char;var P:figuras.pieza;var grilla:interfaz.grilla);
+procedure moverPieza(var key:char;var P:figuras.pieza;var grilla:tablero.grilla);
 	//mueve la pieza dependiendo de la accion que se realiza
 	var i,j,desplX, desplY:integer;
 	puedeRotar:boolean;
@@ -416,7 +416,7 @@ procedure moverPieza(var key:char;var P:figuras.pieza;var grilla:interfaz.grilla
 	end;
 
 
-procedure borrarLinea (var G:interfaz.grilla;PosInicio:integer);
+procedure borrarLinea (var G:tablero.grilla;PosInicio:integer);
 	//borra la linea desplazando toda la grilla desde donde se identifico la linea completa
 	//hasta arriba, desplazando todas las filas una mas abajo
 	var i,j,X,Y,tam:integer;
@@ -446,7 +446,7 @@ procedure borrarLinea (var G:interfaz.grilla;PosInicio:integer);
 	end;
 
 
-procedure confirmarLinea (P:figuras.pieza;var G:interfaz.grilla;nivel:integer;var score:longint;var lineasTotales:integer);
+procedure confirmarLinea (P:figuras.pieza;var G:tablero.grilla;nivel:integer;var score:longint;var lineasTotales:integer);
 	//recorre las 4 lineas donde la pieza quedo estatica y verifica si estan completas para proceder a borrar
 var i,j,min,max:integer;
 	ok:boolean;
@@ -488,7 +488,7 @@ var i,j,min,max:integer;
 	end;
 
 
-function permitirMovimiento(key:char;P:figuras.pieza; Grilla:interfaz.grilla; bordeMovimiento:limitesPieza):boolean;
+function permitirMovimiento(key:char;P:figuras.pieza; Grilla:tablero.grilla; bordeMovimiento:limitesPieza):boolean;
 	//funcion que verifica si el movimiento esta permitido dependiendo de la tecla presionada
 	var ok:boolean;i:integer;
 	begin
@@ -507,7 +507,7 @@ function permitirMovimiento(key:char;P:figuras.pieza; Grilla:interfaz.grilla; bo
 	end;
 	
 	
-procedure caidaRepentina(key:char;var P:figuras.pieza;var Grilla:interfaz.Grilla; bordeMovimiento:limitesPieza);
+procedure caidaRepentina(key:char;var P:figuras.pieza;var Grilla:tablero.Grilla; bordeMovimiento:limitesPieza);
 //registra la caida progresiva y permite la interaccion de otros movimientos en el transcurso. Una vez que toca piso,
 //permite un ultimo movimiento
 var ok:boolean;
@@ -542,7 +542,8 @@ var ok:boolean;
 
 procedure registrarAccion 	(var key:char;
 							var P:figuras.pieza;
-							var Grilla:interfaz.grilla;
+							var SP:figuras.pieza;
+							var Grilla:tablero.grilla;
 							nivel:integer;
 							var score:longint;
 							var lineasTotales:integer
@@ -575,7 +576,9 @@ procedure registrarAccion 	(var key:char;
 				ok:=puedeBajar(P,Grilla,bordeMovimiento);				//el bucle permite multiples caidas
 			end;
 			confirmarLinea(P,Grilla,nivel,score,lineasTotales);			//reviso si la caida de la pieza logro completar una linea
-			figuras.crearFigura(P, Grilla);		//la pieza llego al final y se crea una nueva
+			P:=SP;	//la pieza siguiente pasa a ser la actual
+			figuras.elegirPieza(SP);			//se elije la siguiente pieza
+			figuras.crearPiezaInicial(P, Grilla);		//la pieza llego al final y se crea una nueva
 		end
 		
 		//////// rotar //////////////
@@ -594,7 +597,9 @@ procedure registrarAccion 	(var key:char;
 			end
 			else begin
 				confirmarLinea(P,Grilla,nivel,score,lineasTotales);
-				figuras.crearFigura(P, Grilla);	//ya no puede desplazarse y procede a crear una figura nueva
+				P:=SP;	//la pieza siguiente pasa a ser la actual
+				figuras.elegirPieza(SP);
+				figuras.crearPiezaInicial(P, Grilla);	//ya no puede desplazarse y procede a crear una figura nueva
 			end;
 		end
 		

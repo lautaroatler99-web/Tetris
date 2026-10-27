@@ -5,33 +5,8 @@ interface
 
 //las dimensiones del cuadro es X=800-1000, Y=200-800, tamaño=30;
 
-uses graph,crt,SysUtils;
-
-const fondo=0; //color del fondo del juego
-
-type
-	arrayGrilla=array [1..22,1..12] of boolean;
+uses graph,crt,SysUtils,figuras,tablero;
 	
-	coordenada=record //coordenadas en pixeles de cada celda
-		X:integer;
-		Y:integer;
-	end;
-	
-	colores=record
-		colorBorde:integer;
-		colorRelleno:integer;
-	end;
-	
-	grilla=record
-		panel:arrayGrilla;	//se usa para validar posiciones
-		pos:array[1..22,1..12] of coordenada; //(X,Y) en pixeles
-		color:array[1..22,1..12] of colores; //colores de cada celda
-	end;
-	
-function GrillaX():integer;
-function GrillaY():integer;
-function pixelX(X:integer):integer;
-function pixelY(Y:integer):integer;
 
 procedure iniciarJuego(var G:grilla);
 
@@ -46,46 +21,11 @@ const
 tam=30;	//tamaño absoluto de cada bloque
 
 
-////////////////////////////////////////////// FUNCIONES DE UBICACION //////////////////////////////////////////////
-
-function grillaX ():integer;
-	//divide el total de los pixeles del eje X en bloques de 30,
-	// y lo divide a la mitad retornarno su centro de pantalla.
-	begin
-		grillaX:=( (getmaxX div tam) div 2); //centro de la pantalla eje X
-	end;
-
-	
-function grillaY ():integer;
-	//lo mismo que grillaX pero pra el eje Y
-	begin
-		grillaY:=( (getmaxY div tam) div 2); //centro de la pantalla eje Y
-	end;
-
-
-function pixelX(X:integer):integer;
-		//transforma las coordenadas X en la ubicacion exacto del pixel a partir del borde
-var inicioBordeX:integer;
-	begin
-		inicioBordeX:=6;		// como el ancho es de 12, al restarle 6 me quedo con el borde del eje X
-		pixelX:=grillaX()*tam - (inicioBordeX*tam) + X*tam;	//con grillaX() me ubico en el centro, al restarle el 6*30, me quedo exactamente en el borde del eje X
-	end;													//y con (X*tam) me desplazo la cantidad de pixeles a la ubicacion de la coordenada (X=coordenada entre 1..12)
-
-
-function pixelY(Y:integer):integer;
-	//transforma las coordenadas Y en la ubicacion exacto del pixel en relacion a la grilal jugable.
-var inicioBordeY:integer;
-	begin
-		inicioBordeY:=11;	//el largo es de 22, entonces la mitad me deja en el centro
-		pixelY:=grillaY()*tam - (inicioBordeY*tam) + Y*tam;	//con grillaY() me ubico en el centro, al restarle 11*30, me quedo exactamente en el borde del eje Y
-	end;													//y al sumar (Y*tam) me desplazo la cantidad de pixeles a la ubicacion de la coordenada (Y=coordenada entre 1..22)
-
-
 procedure posicionNivel(var ancho,alto:integer);
 //devuelve las coordenadas XY del nivel
 	begin
-		ancho := interfaz.pixelX(-5)-15;	//posicion del texto
-		alto := interfaz.pixelY(6)+20;		//
+		ancho := tablero.pixelX(-5)-15;	//posicion del texto
+		alto := tablero.pixelY(6)+20;		//
 	end;
 		
 ////////////////////////////////////////////////////////////////////////////////////////////	
@@ -102,11 +42,13 @@ procedure posicionNivel(var ancho,alto:integer);
 //
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Pasos para actualizar el nivel:
-//									1. Se dividen las lineas totales por 10 y se suma 1.
-//									2. Se compara el resultado con el nivel actual
-//									3. 
+//									1. Se guardan los colores actuales.
+//									2. Se dividen las lineas totales por 10 y se suma 1.
+//									3. Se compara el resultado con el nivel actual.
+//									4. Se borra la puntuacion actual.
+//									5. Se imprime la puntuacion actual.
+//									6. Se restauran los colores anteriores.
 //
-
 // Cada nivel consta de 10 lineas:
 //									nivel 1: 0-9 lineas
 //									nivel 2: 10-19 lineas
@@ -211,27 +153,34 @@ var color:integer; colorRelleno:FillSettingsType;
 
 
 ////////////////////////////////////////////// SIG PIEZA ////////////////////////////////////////////// 
-	
-procedure generarInterSigPieza();
-//crea la parte visual del nivel
+
+
+procedure dibujarSigPieza (SP:figuras.pieza);
+	begin
+		
+	end;
+
+
+procedure generarInterfazSigPieza();
+//inicia la parte visual de la siguiente pieza
 	begin
 		settextstyle(0,0,3); //tamaño de letra
 			
 		setcolor(lightgray);		//color del marco
 		
 		SetLineStyle(SolidLn, 0, ThickWidth);	//la linea es mas gruesa
-		rectangle(interfaz.pixelX(-6)+15,		//dibujo el marco
-		interfaz.pixelY(3),
-		interfaz.PixelX(0),
-		interfaz.pixelY(6));
+		rectangle(tablero.pixelX(-6)+15,		//dibujo el marco
+		tablero.pixelY(3),
+		tablero.PixelX(0),
+		tablero.pixelY(6));
 		
 		setcolor(5);		//color de 'Next'
 		
-		outTextXY( (interfaz.pixelX(-4)-10),(interfaz.pixelY(8)+15),'Next');	//sig pieza
+		outTextXY( (tablero.pixelX(-4)-10),(tablero.pixelY(8)+15),'Next');	//sig pieza
 		
 		setColor(white);
 		
-		outTextXY( (interfaz.pixelX(-5)+10),(interfaz.pixelY(10)),'00000');
+		outTextXY( (tablero.pixelX(-5)+10),(tablero.pixelY(10)),'00000');
 
 		SetLineStyle(SolidLn, 0, NormWidth);	//pongo el grosor de la linea a la normalidad
 	end;
@@ -239,7 +188,7 @@ procedure generarInterSigPieza();
 ////////////////////////////////////////////// PUNTUACION //////////////////////////////////////////////
 
 
-procedure borrarPuntuacion (Xscore,Yscore,score:integer);
+procedure borrarScore (Xscore,Yscore,score:integer);
 //crea un bloque negro que tapa los pixeles de la puntuacion
 	var alto,ancho:integer; numeros:string;
 	begin
@@ -268,8 +217,8 @@ var digitos:integer;
 procedure posicionScore (var Xscore:integer;var Yscore:integer);
 //devuelve las coordenadas XY del score
 	begin
-		Xscore:=(interfaz.pixelX(-5)+10);				//posicion de puntuacion
-		Yscore:=(interfaz.pixelY(5));					//
+		Xscore:=(tablero.pixelX(-5)+10);				//posicion de puntuacion
+		Yscore:=(tablero.pixelY(5));					//
 	end;
 	
 	
@@ -287,7 +236,7 @@ var Xscore,Yscore,color,digitos,i:integer;
 		
 		posicionScore(Xscore,Yscore);
 		
-		borrarPuntuacion(Xscore,Yscore,score);			//borro los pixeles de puntuacion anterior
+		borrarScore(Xscore,Yscore,score);			//borro los pixeles de puntuacion anterior
 		
 		digitos:=digitosScore(score);
 		ceros:='';
@@ -315,16 +264,16 @@ var Xscore,Xrectangle,
 		
 		posicionSCore(Xscore,Yscore);
 		
-		Xrectangle:=(interfaz.pixelX(-6)+15);			//posicion rectangulo
-		Yrectangle:=(interfaz.pixelY(8));				//
+		Xrectangle:=(tablero.pixelX(-6)+15);			//posicion rectangulo
+		Yrectangle:=(tablero.pixelY(8));				//
 		
-		Xtext:=(interfaz.pixelX(-4)-20);				//posicion de 'score'
-		Ytext:=(interfaz.pixelY(3)+15);					//
+		Xtext:=(tablero.pixelX(-4)-20);				//posicion de 'score'
+		Ytext:=(tablero.pixelY(3)+15);					//
 		
 		rectangle(Xrectangle,		//dibujo el marco del score
 				Yrectangle,
-				interfaz.PixelX(0),
-				interfaz.pixelY(11));
+				tablero.PixelX(0),
+				tablero.pixelY(11));
 		
 		setcolor(lightblue);		//color de 'Score'
 		
@@ -389,7 +338,7 @@ procedure generarInterfazLinea();
 	end;
 
 
-////////////////////////////////////////////// ////////////////////////////////////////////// 
+//////////////////////////////////////////////////////////////////////////////////////////// 
 
 
 procedure IniciarFondo();
@@ -442,7 +391,7 @@ var gd,gm:integer;	//puestos para la inferfaz grafica
 		iniciarFondo();
 		crearMarco(G,x0,y0);			//crea el borde de cuadros
 		generarInterfazPuntuacion();	//puntacion
-		generarInterSigPieza();			//sig pieza
+		generarInterfazSigPieza();			//sig pieza
 		generarInterfazNivel(); 		//nivel
 		generarInterfazLinea();			//lineas totales
 	end;

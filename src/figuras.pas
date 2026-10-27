@@ -2,7 +2,7 @@ unit figuras;
 
 interface
 
-uses graph,crt,interfaz;
+uses graph,crt,tablero;
 
 
 const
@@ -24,11 +24,9 @@ type
 		tipo:string;
 	end;
 
-	
-procedure crearFigura(var P:pieza; var G:interfaz.grilla);
-
-procedure dibujarPieza(P:pieza;G:interfaz.grilla);
-
+procedure crearPiezaInicial(var P:pieza; var G:tablero.grilla);
+procedure dibujarPieza(P:pieza;G:tablero.grilla);
+procedure elegirPieza(var P:pieza);
 procedure inicializarPieza (var P:pieza);
 
 implementation
@@ -189,7 +187,7 @@ procedure elegirColor(var p:pieza);
 		P.colorBorde:=lightColor;
 	end;
 
-procedure dibujarPieza(P:pieza;G:interfaz.grilla);
+procedure dibujarPieza(P:pieza;G:tablero.grilla);
 //dibuja la pieza
 var i,j,tam,x,y:integer;
 	begin
@@ -207,7 +205,7 @@ var i,j,tam,x,y:integer;
 	end;
 
 
-procedure crearPiezaInicial(var P:pieza; var G:interfaz.grilla);
+procedure crearPiezaInicial(var P:pieza; var G:tablero.grilla);
 //crea la pieza en su primera aparicion, posicionandola en el centro superior de la grilla (2,5)
 var i,j,tam,fila,columna:integer;
 x,y:integer;
@@ -223,8 +221,8 @@ x,y:integer;
 					fila:=1+i;	//Le sumo 1 (i) para que quede empiece en 2
 					columna:=4 + j; //Le sumo 1 (j) para que empiece en la columna 5
 					
-					x:=interfaz.pixelX(columna); 	//fila en pixeles
-					y:=interfaz.pixelY(fila);		//columna en pixeles
+					x:=tablero.pixelX(columna); 	//fila en pixeles
+					y:=tablero.pixelY(fila);		//columna en pixeles
 					
 					P.posBloque[i,j].X:=columna; //guardo la coordenada (2..11) en la grilla
 					P.posBloque[i,j].Y:=fila; //
@@ -242,12 +240,11 @@ x,y:integer;
 				end;
 	end;
 
-
-procedure crearFigura(var P:pieza;var G:grilla);
+procedure elegirPieza(var P:pieza);
+	//elije una figura y color aleatorio
 	begin
 		inicializarPieza(P); //pone todos los campos en false
-		elegirFigura(P); //se elije una figura aleatoria
-		elegirColor(P); //se elije un color aleatorio
-		crearPiezaInicial(P,G); //crea figura inicial
+		elegirfigura(P);
+		elegirColor(P);
 	end;
 end.
