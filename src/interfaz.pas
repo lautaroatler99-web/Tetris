@@ -407,6 +407,30 @@ procedure generarInterfazLinea();
 	end;
 
 
+////////////////////////////////////////////// CONTROLES //////////////////////////////////////////////
+
+procedure posicionControles (var X:integer; var Y:integer);
+	//devuelve las coordenadas en pixeles donde se van a dibujar los controles
+	begin
+		X:=pixelX(14);
+		Y:=pixelY(12);
+	end;
+	
+	
+procedure generarInterfazControles();
+var X,Y:integer;
+	begin
+		posicionControles(X,Y);
+		
+		setColor(white);
+		outTextXY (X,Y,'Left: A');
+		outTextXY (X,Y+40,'Right: D');
+		outTextXY (X,Y+80,'Drop: S');
+		outTextXY (X,Y+120,'Rotate: W');
+		outTextXY (X,Y+160,'pause: ESC');
+	end;
+
+
 //////////////////////////////////////////////////////////////////////////////////////////// 
 
 
@@ -414,20 +438,6 @@ procedure IniciarFondo();
 	begin
 		SetFillStyle(SolidFill, fondo);
 		bar (0,0,getMaxX(),getMaxY);
-	end;
-
-////////////////////////////////////////////// FUNCIONES PUBLICAS //////////////////////////////////////////////
-
-procedure sumarPuntos (lineasCompletadas,nivel:integer;var score:longint);
-//suma puntos dependiendo de cuantas lineas consecutivas se hayan completados
-	begin
-		case lineasCompletadas of
-			1: score:=score+100*nivel;
-			2: score:=score+200*nivel;
-			3: score:=score+500*nivel;
-			4: score:=score+800*nivel;
-		end;
-		actualizarPuntuacion (score);
 	end;
 
 procedure cuadroPausa(X1,X2,Y1,Y2,tamanio:integer;var imagen:pointer);
@@ -449,6 +459,22 @@ procedure borrarCuadroPausa (X1,Y1:integer;var imagen:pointer;tamanio:integer);
 	begin
 		PutImage(X1, Y1, imagen^, NormalPut);	//pongo la imagen guardada
 		FreeMem(imagen, tamanio);			//libero la memoria
+	end;
+	
+
+////////////////////////////////////////////// FUNCIONES PUBLICAS //////////////////////////////////////////////
+
+
+procedure sumarPuntos (lineasCompletadas,nivel:integer;var score:longint);
+//suma puntos dependiendo de cuantas lineas consecutivas se hayan completados
+	begin
+		case lineasCompletadas of
+			1: score:=score+100*nivel;
+			2: score:=score+200*nivel;
+			3: score:=score+500*nivel;
+			4: score:=score+800*nivel;
+		end;
+		actualizarPuntuacion (score);
 	end;
 	
 	
@@ -506,6 +532,7 @@ var gd,gm:integer;	//puestos para la inferfaz grafica
 		generarInterfazSigPieza();			//sig pieza
 		generarInterfazNivel(); 		//nivel
 		generarInterfazLinea();			//lineas totales
+		generarInterfazControles();		//muestra los controles
 	end;
 
 end.

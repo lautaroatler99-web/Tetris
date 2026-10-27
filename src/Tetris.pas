@@ -33,6 +33,7 @@ begin					//tablero principal 10*20;
 			tiempoActual:=GetTickCount64;
 			if keypressed then begin
 				key:=readkey;
+				key:=lowerCase(key);
 				if ( (key='a') or (key='d') or (key='s') or (key='w') or (key=#27{esc}) ) then
 					movimiento.registrarAccion(key,P,SP,grilla,nivel,score,lineasTotales,gameOver);
 			end;

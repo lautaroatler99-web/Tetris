@@ -107,7 +107,7 @@ procedure figS (var f:fig;var rotacion:boolean;var tipo:string);
 procedure figInvertedS (var f:fig;var rotacion:boolean;var tipo:string);
 //figura en S invertida
 	begin
-		//X,Y	
+		//X,Y
 		f[1,2]:=true;
 		f[1,3]:=true;	//	  [][]
 		f[2,3]:=true;	//	    [][]
@@ -218,12 +218,10 @@ x,y:integer;
 		for i:=1 to 3 do
 			if (G.panel[i+1, 7] ) then begin	//si cualquier de estas 3 posiciones esta ocupada, la pieza no puede crearse
 					gameOver:=true;
-					
-							//sale de la funcion
+					exit;//sale de la funcion
 				end;
-				writeln('gameover es : ',gameover);
-		for i:=1 to max do 
-			for j:=1 to max do 
+		for i:=1 to max do
+			for j:=1 to max do
 				if (P.posValida[i,j]) then begin
 					
 					fila:=1+i;	//Le sumo 1 (i) para que quede empiece en 2
