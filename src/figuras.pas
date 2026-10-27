@@ -24,7 +24,7 @@ type
 		tipo:string;
 	end;
 
-procedure crearPiezaInicial(var P:pieza; var G:tablero.grilla);
+procedure crearPiezaInicial(var P:pieza; var G:tablero.grilla;var gameOver:boolean);
 procedure dibujarPieza(P:pieza;G:tablero.grilla);
 procedure elegirPieza(var P:pieza);
 procedure inicializarPieza (var P:pieza);
@@ -205,7 +205,7 @@ var i,j,tam,x,y:integer;
 	end;
 
 
-procedure crearPiezaInicial(var P:pieza; var G:tablero.grilla);
+procedure crearPiezaInicial(var P:pieza; var G:tablero.grilla;var gameOver:boolean);
 //crea la pieza en su primera aparicion, posicionandola en el centro superior de la grilla (2,5)
 var i,j,tam,fila,columna:integer;
 x,y:integer;
@@ -214,6 +214,14 @@ x,y:integer;
 		
 		SetFillStyle(SolidFill,P.colorRelleno);
 		setcolor(P.colorBorde);
+		//////verifico que no este ocupada
+		for i:=1 to 3 do
+			if (G.panel[i+1, 7] ) then begin	//si cualquier de estas 3 posiciones esta ocupada, la pieza no puede crearse
+					gameOver:=true;
+					
+							//sale de la funcion
+				end;
+				writeln('gameover es : ',gameover);
 		for i:=1 to max do 
 			for j:=1 to max do 
 				if (P.posValida[i,j]) then begin
