@@ -22,7 +22,8 @@ begin					//tablero principal 10*20;
 	lineasTotales:=0;
 	gameOver:=false;
 	
-	ok:=menu.inicio();
+	//ok:=menu.inicio();
+	ok:=true;
 	if (ok) then begin
 		interfaz.iniciarJuego(Grilla);
 		figuras.elegirPieza(P);			//se elije la primera pieza
