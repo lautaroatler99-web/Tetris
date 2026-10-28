@@ -74,14 +74,18 @@ procedure iniciarGraficos();
 	end;
 
 procedure posicionControles (var X:integer; var Y:integer);
+//coordenadas predeterminadas de los controles del menu
 	begin
 		X:=pixelX(3)+15;
 		Y:=pixelY(15);
 	end;
 
 procedure mostrarControles ();
+//muestra los controles en la pantalla del menu
 var X,Y,distancia:integer;
 	begin
+		setColor(white);
+		settextstyle(0,0,2); //tamaño de letra
 		distancia:=40;
 		posicionControles(X,Y);
 		setColor(white);
@@ -176,7 +180,6 @@ procedure interfazMenu(var P:puntos;distancia:integer);
 var X1,X2,Y1,Y2:integer;
 	begin
 		setColor(white);
-		settextstyle(0,0,2); //tamaño de letra
 		
 		mostrarControles();
 		
@@ -258,6 +261,7 @@ var opcion:integer;key:char;
 	end;
 
 procedure inicio();
+//se encarga del la configuracion del menu
 var P:puntos; distancia:integer;
 	ok:boolean;
 	begin
