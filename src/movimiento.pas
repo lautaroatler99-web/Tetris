@@ -518,6 +518,7 @@ var ok:boolean;
 			delay(75);
 			if keypressed then begin		//se puede mover mientras cae
 				key:=readkey;
+				key:=lowerCase(key);
 				if (key=#27) then			//pausa en caida
 					interfaz.pausa()
 				else
@@ -534,6 +535,7 @@ var ok:boolean;
 		delay(300);	//ultima chance para mover la pieza antes de confirmar posicion
 		if (keypressed) then begin
 			key:=readkey;
+			key:=lowerCase(key);
 			if (permitirMovimiento(key,p,grilla,bordeMovimiento)) then
 				moverPieza(key,P,Grilla);
 		end;
