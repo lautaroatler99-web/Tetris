@@ -507,18 +507,22 @@ function permitirMovimiento(key:char;P:figuras.pieza; Grilla:tablero.grilla; bor
 	end;
 	
 	
-procedure caidaRepentina(key:char;var P:figuras.pieza;var Grilla:tablero.Grilla; bordeMovimiento:limitesPieza);
+procedure caidaRepentina(key:char;var P:figuras.pieza;var Grilla:tablero.Grilla; bordeMovimiento:limitesPieza;var gameover:boolean);
 //registra la caida progresiva y permite la interaccion de otros movimientos en el transcurso. Una vez que toca piso,
 //permite un ultimo movimiento
 var ok:boolean;
 	begin
 		ok:=puedeBajar(P,Grilla,bordeMovimiento);
 		
-		while (ok) do begin
+		while (ok) and not (gameover) do begin
 			delay(75);
 			if keypressed then begin		//se puede mover mientras cae
 				key:=readkey;
 				key:=lowerCase(key);
+				if (key='q') then begin
+					gameover:=true;
+					exit;
+				end;
 				if (key=#27) then			//pausa en caida
 					interfaz.pausa()
 				else
@@ -589,11 +593,11 @@ procedure registrarAccion 	(var key:char;
 		
 		else if (key='s') then begin 
 			ok:=puedeBajar(P,Grilla,bordeMovimiento);
-			while (ok) do begin
-				caidaRepentina(key, P, Grilla, bordeMovimiento);	//la pieza cae hasta tocar piso
+			while (ok) and not(gameover) do begin
+				caidaRepentina(key, P, Grilla, bordeMovimiento,gameover);	//la pieza cae hasta tocar piso
 				
 				if (puedeBajar(P,Grilla,bordeMovimiento)) then			//si despues de moverse sigue en el aire, continua cayendo
-					caidaRepentina(key, P, Grilla, bordeMovimiento);	//
+					caidaRepentina(key, P, Grilla, bordeMovimiento,gameover);	//
 				ok:=puedeBajar(P,Grilla,bordeMovimiento);				//el bucle permite multiples caidas
 			end;
 			finalizarCaida(P,SP,Grilla,nivel,score,lineasTotales,blocks,gameOver);
@@ -617,6 +621,10 @@ procedure registrarAccion 	(var key:char;
 				finalizarCaida(P,SP,Grilla,nivel,score,lineasTotales,blocks,gameOver);
 		end
 		
+		//////// salir //////////////
+		else if (key='q') then begin
+			gameOver:=true;
+		end
 		//////// pausa //////////////
 		
 		else if (key=#27) then
