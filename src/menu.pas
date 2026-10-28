@@ -14,7 +14,7 @@ implementation
 
 
 procedure jugar ();
-//inicia el juego tetris.
+//inicia el juego Tetris.
 var key:char;
 	P,SP:figuras.pieza; //pieza y sig pieza
 	Grilla:tablero.grilla;	//mapa del juego
@@ -47,7 +47,7 @@ var key:char;
 			if keypressed then begin
 				key:=readkey;
 				key:=lowerCase(key);
-				if ( (key='a') or (key='d') or (key='s') or (key='w') or (key=#27{esc}) ) then
+				if ( (key='a') or (key='d') or (key='s') or (key='w') or (key='q') or (key=#27{esc}) ) then
 					movimiento.registrarAccion(key,P,SP,grilla,nivel,score,lineasTotales,blocks,gameOver);
 			end;
 			
@@ -71,6 +71,27 @@ procedure iniciarGraficos();
 	begin
 		gd:=detect;
 		Initgraph(gd,gm,''); //iniciamos interfaz
+	end;
+
+procedure posicionControles (var X:integer; var Y:integer);
+	begin
+		X:=pixelX(3)+15;
+		Y:=pixelY(15);
+	end;
+
+procedure mostrarControles ();
+var X,Y,distancia:integer;
+	begin
+		distancia:=40;
+		posicionControles(X,Y);
+		setColor(white);
+		outTextXY(X,Y,('W / '+ #24 +': Move up') );
+		
+		outTextXY(X,Y+distancia,('S / '+ #25+ ': Move down') );
+		
+		distancia:=distancia+40;
+		
+		outTextXY(X,Y+distancia,'ENTER: select');
 	end;
 
 
@@ -155,6 +176,10 @@ procedure interfazMenu(var P:puntos;distancia:integer);
 var X1,X2,Y1,Y2:integer;
 	begin
 		setColor(white);
+		settextstyle(0,0,2); //tamaño de letra
+		
+		mostrarControles();
+		
 		settextstyle(0,0,3); //tamaño de letra
 		
 		X1:=pixelX(3);			//
