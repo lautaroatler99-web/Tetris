@@ -13,6 +13,8 @@ procedure inicio();
 
 implementation
 
+///////////////////////////////  JUEGO /////////////////////////////// 
+
 
 procedure jugar ();
 //inicia el juego Tetris.
@@ -80,10 +82,11 @@ var key:char;
 		player.score:=score;
 		player.level:=nivel;
 		player.lines:=lineasTotales;
-		if (player.score<>0) then	//solo se guarda si hizo mas de 0 puntos
+		//if (player.score<>0) then	//solo se guarda si hizo mas de 0 puntos
 			archivo.guardarResultados(player,filePlayer);
 	end;
 
+////////////////////////////////////////////////////////////// 
 
 procedure iniciarGraficos();
 //configura y da inicio a los graficos
@@ -141,8 +144,11 @@ procedure marco (X1,X2,Y1,Y2:integer);
 		setColor(cyan);
 		outTextXY (X1 + (X2-X1) div 2 - textwidth('Tetris') div 2, Y1-50 ,'Tetris');
 	end;
+
 	
-	
+///////////////////////////////  MENU /////////////////////////////// 
+
+
 procedure crearBoton(X1,X2,Y1,Y2:integer;text:string);
 //crea los botones del menu
 	begin
@@ -258,6 +264,7 @@ procedure borrarInterfazMenu();
 		bar(pixelX(3),pixelY(4),pixelX(12),pixelY(19));
 	end;
 
+/////////////////////////////// PUNTUACION /////////////////////////////// 
 
 procedure posicionPuntuacion (var X:integer;var Y:integer);
 //calcula la posicion donde estaran las puntuaciones
@@ -270,7 +277,7 @@ procedure posicionPuntuacion (var X:integer;var Y:integer);
 procedure mostrarEncabezados (X:integer;Y:integer);
 //muestra los encabezados del score
 	begin
-		X:=X+200;
+		X:=X+150;
 		outTextXY(X,Y, 'name');
 		X:=X+200;
 		outTextXY(X,Y, 'score' );
@@ -285,14 +292,19 @@ procedure imprimirPuntuacion (player:archivo.recordPlayer;X,Y,i:integer);
 	//imprime los archivos en pantalla
 	begin
 		outTextXY(X,Y,intToStr(i)+'.');
+		//todos los textos centrados
+		// ( (X - texto) div 2 ) te deja exactamente en el centro de la palabra
 		X:=X+200;
-		outTextXY(X,Y, player.name);
+		outTextXY (X - textWidth(player.name) div 2,Y, player.name);
+		
 		X:=X+200;
-		outTextXY(X,Y, intToStr(player.score) );
+		outTextXY (X - textWidth(intToStr(player.score) ) div 2,Y, intToStr(player.score) );
+		
 		X:=X+200;
-		outTextXY(X,Y, intToStr(player.level) );
+		outTextXY (X - textWidth(intToStr(player.level) ) div 2,Y, intToStr(player.level) );
+		
 		X:=X+200;
-		outTextXY(X,Y, intToStr(player.lines) );
+		outTextXY (X - textWidth(intToStr(player.lines) ) div 2,Y, intToStr(player.lines) );
 	end;
 
 
@@ -301,6 +313,7 @@ procedure mostrarPuntuacion();
 var filePlayer:archivo.arch; player:archivo.recordPlayer;
 	i,X,Y:integer;
 	begin
+		setColor(lightgreen);
 		borrarInterfazMenu();
 		
 		posicionPuntuacion(X,Y);
@@ -321,7 +334,9 @@ var filePlayer:archivo.arch; player:archivo.recordPlayer;
 		readkey;
 		interfaz.iniciarFondo();
 	end;
-	
+
+////////////////////////////////////////////////////////////// 
+
 procedure accion (var ok:boolean; P:puntos;distancia:integer);
 //desplaza el triangulo entre las 3 opciones (Play, score, exit) y determina la accion
 var opcion:integer;key:char;
