@@ -115,6 +115,7 @@ procedure generarInterfazNivel();
 //crea la interfaz relacionada al nivel
 var ancho,alto:integer;texto:string;
 	begin
+		setColor(white);
 		texto:='Level:';
 		posicionNivel(ancho,alto);
 		outTextXY (ancho,alto,texto);
@@ -247,9 +248,6 @@ procedure generarInterfazSigPieza();
 		setcolor(5);		//color de 'Next'
 		
 		outTextXY( (tablero.pixelX(-4)-10),(tablero.pixelY(8)+15),'Next');	//sig pieza
-		
-		setColor(white);
-
 		SetLineStyle(SolidLn, 0, NormWidth);	//pongo el grosor de la linea a la normalidad
 		
 	end;
@@ -402,6 +400,7 @@ procedure actualizarLineas(lineasTotales:integer);
 procedure generarInterfazLinea();
 	var X,Y:integer;
 	begin
+		setColor(white);
 		posicionLineas(X,Y);
 		outTextXY(X,Y, 'Lines:0');
 	end;
@@ -425,13 +424,17 @@ var X,Y:integer;
 		setColor(lightBlue);
 		outTextXY (X,Y,'A: Left');
 		setColor(lightRed);
-		outTextXY (X,Y+40,'D: Right');
+		Y:=Y+40;
+		outTextXY (X,Y,'D: Right');
 		setColor(lightGreen);
-		outTextXY (X,Y+80,'S: Drop');
+		Y:=Y+40;
+		outTextXY (X,Y,'S: Drop');
 		setColor(lightMagenta);
-		outTextXY (X,Y+120,'W: Rotate');
+		Y:=Y+40;
+		outTextXY (X,Y,'W: Rotate');
 		setColor(lightCyan);
-		outTextXY (X,Y+160,'ESC: pause');
+		Y:=Y+40;
+		outTextXY (X,Y,'ESC: pause');
 	end;
 
 
@@ -488,7 +491,7 @@ var X,Y:integer;
 //////////////////////////////////////////////////////////////////////////////////////////// 
 
 
-procedure IniciarFondo();
+procedure iniciarFondo();
 	begin
 		SetFillStyle(SolidFill, fondo);
 		bar (0,0,getMaxX(),getMaxY);
@@ -569,13 +572,8 @@ procedure pausa ();
 	
 procedure iniciarJuego(var G:grilla);	//la grilla total consta de 12*22 (10*20 jugable + el marco)
 	//inicializa el modo grafico, configura el color y los demas componentes.
-var gd,gm:integer;	//puestos para la inferfaz grafica
-	x0,y0:integer;	//posiciones del inicio
+var x0,y0:integer;	//posiciones del inicio
 	begin
-		gd:=detect;
-		Initgraph(gd,gm,''); //iniciamos interfaz
-		setcolor(white);
-
 		x0:=pixelX(1);	//le mando 1 por ser la base
 		y0:=pixelY(1);	//
 		
@@ -589,5 +587,4 @@ var gd,gm:integer;	//puestos para la inferfaz grafica
 		generarInterfazControles();		//muestra los controles
 		interfazContBloques(0);		//muestra cant bloques
 	end;
-
 end.
