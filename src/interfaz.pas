@@ -211,6 +211,7 @@ var X,Y:integer;
 		setFillStyle(solidFill, fondo);
 		bar(X+15,Y,X+(30*4)+20,Y+30*3);
 	end;
+
 	
 procedure panelPiezaSiguiente(SP:figuras.pieza);
 	//procedimiento base para limpiar pantalla y redibujar la pieza siguiente
@@ -227,7 +228,6 @@ procedure panelPiezaSiguiente(SP:figuras.pieza);
 		setColor(color); 	//restauro el color	(POP)
 		SetFillStyle(colorRelleno.Pattern, colorRelleno.Color);// restauro la configuracion de fillStyle (POP)
 	end;
-
 
 
 procedure generarInterfazSigPieza();
@@ -398,6 +398,7 @@ procedure actualizarLineas(lineasTotales:integer);
 	end;
 	
 procedure generarInterfazLinea();
+//crea la parte del contador de lineas en pantalla
 	var X,Y:integer;
 	begin
 		setColor(white);
@@ -417,21 +418,22 @@ procedure posicionControles (var X:integer; var Y:integer);
 	
 	
 procedure generarInterfazControles();
+//muestra en pantalla los controles
 var X,Y:integer;
 	begin
 		posicionControles(X,Y);
 		
 		setColor(lightBlue);
-		outTextXY (X,Y,'A: Left');
+		outTextXY (X,Y,'A / '+#27+' : Left');
 		setColor(lightRed);
 		Y:=Y+40;
-		outTextXY (X,Y,'D: Right');
+		outTextXY (X,Y,'D / '+#26+' : Right');
 		setColor(lightGreen);
 		Y:=Y+40;
-		outTextXY (X,Y,'S: Drop');
+		outTextXY (X,Y,'S / '+#25+': Drop');
 		setColor(lightMagenta);
 		Y:=Y+40;
-		outTextXY (X,Y,'W: Rotate');
+		outTextXY (X,Y,'W / '+#24+': Rotate');
 		setColor(yellow);
 		Y:=Y+40;
 		outTextXY(X,Y,'Q: quit');
@@ -445,6 +447,7 @@ var X,Y:integer;
 
 
 procedure posicionBloques (var X:integer; var Y:integer);
+//posicion fija para la interfaz del contador de bloques
 	begin
 		X:=pixelX(14);
 		Y:=pixelY(5)+10;
@@ -452,6 +455,7 @@ procedure posicionBloques (var X:integer; var Y:integer);
 
 
 procedure borrarContBloques (X,Y:integer;text:string);
+//borra el contador actual de los bloques
 var numeros:string;
 	begin
 		numeros:='9999';
@@ -461,6 +465,7 @@ var numeros:string;
 
 
 procedure actualizarContBloques (var blocks:integer);
+//acutaliza la cantidad del contador de bloques
 var X,Y,color:integer;colorRelleno:FillSettingsType;
 	text:string;
 	begin
@@ -482,8 +487,8 @@ var X,Y,color:integer;colorRelleno:FillSettingsType;
 
 	
 procedure interfazContBloques (blocks:integer);
+//crea la interfaz del contador de bloques
 var X,Y:integer;
-
 	begin
 		posicionBloques(X,Y);
 		setColor(white);
@@ -495,6 +500,7 @@ var X,Y:integer;
 
 
 procedure iniciarFondo();
+//pinta toda la pantalla del color de fondo
 	begin
 		SetFillStyle(SolidFill, fondo);
 		bar (0,0,getMaxX(),getMaxY);
