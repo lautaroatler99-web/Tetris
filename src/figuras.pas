@@ -250,7 +250,7 @@ procedure elegirPieza(var P:pieza);
 	//elije una figura y color aleatorio
 	begin
 		inicializarPieza(P); //pone todos los campos en false
-		elegirfigura(P);
+		elegirFigura(P);
 		elegirColor(P);
 	end;
 	

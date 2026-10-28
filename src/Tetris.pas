@@ -17,11 +17,12 @@ var
 	blocks:integer;
 begin					//tablero principal 10*20;
 	randomize;
-	ok:=true; //ok:=menu.inicio();
 	score:=0;
 	nivel:=1;
 	lineasTotales:=0;
 	gameOver:=false;
+	
+	ok:=menu.inicio();
 	if (ok) then begin
 		interfaz.iniciarJuego(Grilla);
 		figuras.elegirPieza(P);			//se elije la primera pieza
@@ -40,7 +41,7 @@ begin					//tablero principal 10*20;
 				end;
 			end;
 			
-			intervalo:=1100- nivel*100;    //al principio queda en 1000ms
+			intervalo:=1100 - nivel*100;    //al principio queda en 1000ms
 				
 			if (intervalo<100) then		//ajusto el intervalo para que no quede en 0 o negativo
 				intervalo:=100;
