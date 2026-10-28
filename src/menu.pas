@@ -2,9 +2,10 @@ unit menu;
 
 interface
 
-uses graph,wincrt,tablero,figuras,interfaz,movimiento,SysUtils;
+uses graph,wincrt,tablero,figuras,interfaz,movimiento,SysUtils,archivo;
 
-const fondoMenu=10;
+const fondoMenu=10;	//color de fondo  del menu
+	fondo=0;	//color de fondo del juego
 type
 puntos=array [1..6] of integer; //array de coordenadas para rellenar el triangulo
 
@@ -24,7 +25,9 @@ var key:char;
 	intervalo:integer;
 	gameOver:boolean;
 	blocks:integer;
-
+	player:archivo.recordPlayer;
+	filePlayer:archivo.arch;
+	name:string[7];
 	begin					//tablero principal 10*20;
 		gameOver:=false;
 
@@ -72,6 +75,13 @@ var key:char;
 				tiempo:=tiempoActual;
 			end;
 		end;
+
+		player.name:=name;
+		player.score:=score;
+		player.level:=nivel;
+		player.lines:=lineasTotales;
+		if (player.score<>0) then	//solo se guarda si hizo mas de 0 puntos
+			archivo.guardarResultados(player,filePlayer);
 	end;
 
 
@@ -241,6 +251,76 @@ var X1,X2,Y1,Y2:integer;
 		////triangulo actualmente apunta a 'Jugar'.
 	end;
 
+
+procedure borrarInterfazMenu();
+	begin
+		setFillStyle(SolidFill,fondo);
+		bar(pixelX(3),pixelY(4),pixelX(12),pixelY(19));
+	end;
+
+
+procedure posicionPuntuacion (var X:integer;var Y:integer);
+//calcula la posicion donde estaran las puntuaciones
+	begin
+		X:=pixelX(-8);
+		Y:=pixelY(7);
+	end;
+	
+	
+procedure mostrarEncabezados (X:integer;Y:integer);
+//muestra los encabezados del score
+	begin
+		X:=X+200;
+		outTextXY(X,Y, 'name');
+		X:=X+200;
+		outTextXY(X,Y, 'score' );
+		X:=X+200;
+		outTextXY(X,Y, 'level' );
+		X:=X+200;
+		outTextXY(X,Y, 'lines' );
+	end;
+
+
+procedure imprimirPuntuacion (player:archivo.recordPlayer;X,Y,i:integer);
+	//imprime los archivos en pantalla
+	begin
+		outTextXY(X,Y,intToStr(i)+'.');
+		X:=X+200;
+		outTextXY(X,Y, player.name);
+		X:=X+200;
+		outTextXY(X,Y, intToStr(player.score) );
+		X:=X+200;
+		outTextXY(X,Y, intToStr(player.level) );
+		X:=X+200;
+		outTextXY(X,Y, intToStr(player.lines) );
+	end;
+
+
+procedure mostrarPuntuacion();
+//recorre el archivo recolectando los datos
+var filePlayer:archivo.arch; player:archivo.recordPlayer;
+	i,X,Y:integer;
+	begin
+		borrarInterfazMenu();
+		
+		posicionPuntuacion(X,Y);
+		
+		mostrarEncabezados(X,Y-60);
+		
+		archivo.abrirArchivo(filePlayer);
+		i:=0;
+		while ( (not (EOF (filePlayer))) and (i<10) ) do begin
+			i:=i+1;
+			read(filePlayer,player);				//guardo la informacion del archivo en player
+				
+			imprimirPuntuacion(player,X,Y,i);
+			Y:=Y++40; 				//desplazamiento
+		end;
+
+		close(filePlayer);
+		readkey;
+		interfaz.iniciarFondo();
+	end;
 	
 procedure accion (var ok:boolean; P:puntos;distancia:integer);
 //desplaza el triangulo entre las 3 opciones (Play, score, exit) y determina la accion
@@ -276,15 +356,18 @@ var opcion:integer;key:char;
 				case opcion of
 					1:begin
 						//jugar
-						Jugar();
+						jugar();
 						//al salir de jugar se vuelve al menu
 						closegraph;
 						iniciarGraficos();
 						interfazMenu(P,distancia);
 					end;
-					//2:begin
+					2:begin
 						//score
-					//end;
+						mostrarPuntuacion();
+						interfazMenu(P,distancia);
+						opcion:=1;
+					end;
 					3:begin
 					//salir
 						ok:=false;
