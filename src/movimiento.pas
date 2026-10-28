@@ -519,6 +519,17 @@ var ok:boolean;
 			if keypressed then begin		//se puede mover mientras cae
 				key:=readkey;
 				key:=lowerCase(key);
+				
+				if (key=#0) then begin	//si se activa una flecha, primero manda #0
+					key:=readkey;
+					case key of
+						#72: key:='w';	//flecha arriba
+						#75: key:='a';	//flecha izquierda
+						#77: key:='d';	//flecha derecha
+						#80: key:='s';	//flecha abajo
+					end;
+				end;
+				
 				if (key='q') then begin
 					gameover:=true;
 					exit;

@@ -47,6 +47,16 @@ var key:char;
 			if keypressed then begin
 				key:=readkey;
 				key:=lowerCase(key);
+				if (key=#0) then begin	//si se activa una flecha, primero manda #0
+					key:=readkey;
+					case key of
+						#72: key:='w';	//flecha arriba
+						#75: key:='a';	//flecha izquierda
+						#77: key:='d';	//flecha derecha
+						#80: key:='s';	//flecha abajo
+					end;
+				end;
+				
 				if ( (key='a') or (key='d') or (key='s') or (key='w') or (key='q') or (key=#27{esc}) ) then
 					movimiento.registrarAccion(key,P,SP,grilla,nivel,score,lineasTotales,blocks,gameOver);
 			end;
@@ -225,7 +235,15 @@ var opcion:integer;key:char;
 		while (ok) do begin
 			key:=readkey;
 			key:=lowercase(key);
-			if (key='s') then begin		//bajar menu
+			if (key =#0) then begin 	//se apreto una tecla especial (posible flechas)
+				key:=readkey;
+				case key of
+					#72:key:='w';		//#72 es flecha arriba
+					#80:key:='s';		//#80 es flecha abajo
+				end;
+			end;
+			//bajar menu
+			if (key='s') then begin
 				if (opcion<3) then begin
 					bajarMenu (P,distancia);
 					opcion:=opcion+1;
@@ -259,6 +277,7 @@ var opcion:integer;key:char;
 				end;
 		end;
 	end;
+
 
 procedure inicio();
 //se encarga del la configuracion del menu
