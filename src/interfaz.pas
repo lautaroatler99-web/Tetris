@@ -16,6 +16,7 @@ procedure actualizarNivel (lineasTotales:integer;var nivel:integer);
 procedure actualizarLineas(lineasTotales:integer);
 procedure panelPiezaSiguiente(SP:figuras.pieza);
 procedure actualizarContBloques (var blocks:integer);
+procedure iniciarFondo();
 implementation
 
 const 
