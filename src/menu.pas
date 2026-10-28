@@ -90,6 +90,20 @@ procedure posicionControles (var X:integer; var Y:integer);
 		Y:=pixelY(15);
 	end;
 
+
+procedure mostrarFirma ();
+//firma del proyecto
+var X,Y:integer;text:string;
+	begin
+		settextstyle(0,0,2); //tamaño de letra
+		setColor(lightgray);
+		text:='Made by: Atler Lautaro';
+		X:=getMaxX;
+		Y:=getMaxY;
+		outTextXY(X - textwidth(text) -10,Y - textheight(text) -10,text);
+	end;
+
+
 procedure mostrarControles ();
 //muestra los controles en la pantalla del menu
 var X,Y,distancia:integer;
@@ -189,10 +203,11 @@ procedure interfazMenu(var P:puntos;distancia:integer);
 //crea los botones del menu y declara el vector de posicione del triangulo de asignacion
 var X1,X2,Y1,Y2:integer;
 	begin
-		setColor(white);
+		mostrarFirma();
 		
 		mostrarControles();
 		
+		setColor(white);
 		settextstyle(0,0,3); //tamaño de letra
 		
 		X1:=pixelX(3);			//
