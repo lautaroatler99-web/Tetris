@@ -19,6 +19,7 @@ procedure actualizarContBloques (var blocks:integer);
 procedure iniciarFondo();
 procedure actualizarHighScore(highScore:longint);
 function ingresarNombre():string;
+procedure finalizarPartida(Grilla:tablero.grilla);
 
 implementation
 
@@ -90,6 +91,79 @@ var fila,columna,x,y:integer;
 				end;
 			end;
 	end;
+
+
+procedure crearBloque(grilla:tablero.grilla;i,j:integer);
+//crea un cuadrado de color aleatorio para pintar la grilla en el gameOver
+var tam,color,lightColor,X,Y:integer;
+	begin
+		tam:=30;
+		color:=random(6)+1;
+		lightColor:=color+8;
+			
+		setFillStyle(SolidFill,color);	//color del bloque
+		setColor(lightColor);			//color de borde
+			
+		X:=grilla.pos[i,j].X;
+		Y:=grilla.pos[i,j].Y;
+		bar(x+1,y+1,x+tam-1,y+tam-1);		//imprimo bloque
+		rectangle(x+1,y+1,x+tam-1,y+tam-1); //imprimo borde
+	end;
+	
+procedure finalizarPartida(Grilla:tablero.grilla);
+	//recorre la grilla en espiral pintando todo a su paso
+var i,j:integer;
+	filaMin,filaMax,colMin,colMax:integer;
+	
+	begin
+		filaMin:=2;		//
+		colMin:=2;		//rangos de la grilla jugable
+		filaMax:=21;	//
+		colMax:=11;		//
+		
+		while (filaMin<=filaMax) and (colMin <=colMax) do begin
+		
+			//IZQUIERDA A DERECHA
+			for j:=colMin to colMax do begin
+				crearBloque(grilla,filaMin,j);
+				delay(25);
+				if (keypressed) then
+					exit;
+			end;
+			filaMin:=filaMin+1;
+			
+			//ARRIBA A ABAJO
+			for i:=filaMin to filaMax do begin
+				crearBloque(grilla,i,colMax);
+				delay(25);
+				if (keypressed) then
+					exit;
+			end;
+			colMax:=colMax-1;
+			
+			//ABAJO A ARRIBA
+			for j:=colMax downto colMin do begin
+				crearBloque(grilla,filaMax,j);
+				delay(25);
+				if (keypressed) then
+					exit;
+			end;
+			filaMax:=filaMax-1;
+			
+			//DERECHA A IZQUIERDA
+			
+			for i:=filaMax downto filaMin do begin
+				crearBloque(grilla,i,colMin);
+				delay(25);
+				if (keypressed) then
+					exit;
+			end;
+			colMin:=colMin+1;
+		end;
+		
+		readkey;
+	end;
+
 
 
 ////////////////////////////////////////////// NIVEL //////////////////////////////////////////////
