@@ -17,6 +17,8 @@ procedure actualizarLineas(lineasTotales:integer);
 procedure panelPiezaSiguiente(SP:figuras.pieza);
 procedure actualizarContBloques (var blocks:integer);
 procedure iniciarFondo();
+procedure actualizarHighScore(highScore:longint);
+
 implementation
 
 const 
@@ -358,14 +360,50 @@ var Xscore,Xrectangle,
 ////////////////////////////////////////////// HIGH SCORE //////////////////////////////////////////////
 
 procedure posicionHighScore(var X:integer; var Y:integer);
+//posicion de la parte de high score
 	begin
 		X:=pixelX(14);
 		Y:=pixelY(8)+10;
 	end;
+
+
+procedure borrarPixelHighScore(X,Y:integer);
+//borra los pixeles de la puntuacion de high score
+	begin
+		setFillStyle(solidFill,fondo);
+		bar (X+50,Y+40,X+50+textwidth('00000'),Y+40+textheight('00000')); //coordenadas exactas del tamaño de la puntuacion
+	end;
+
+
+procedure actualizarHighScore(highScore:longint);
+//actualiza la puntuacion de high score
+	var X,Y,color:integer;colorRelleno:FillSettingsType;
+	ceros:string;
+	dig,i:integer;
+	begin
+		color:=getColor;				//guardo el color actual (PUSH)
+		getFillSettings(colorRelleno); 	//guardo la configuracion de fillstyle actual (PUSH)
+		
+		posicionHighScore(X,Y);
+		
+		borrarPixelHighScore(X,Y);
+		
+		setColor(white);
+		dig:=digitosScore(highScore);
+		ceros:='';
+		for i:=1 to 5-dig do		//la puntuacion tiene 5 digitos. Se agregan
+			ceros:=ceros+'0';			//tantos 0 como la diferencia entre digitos y SCORE
+		
+		outTextXY( X+50,Y+40, ceros+IntToStr(highScore));		//piso el valor de la puntuacion
+		
+		setColor(color); 	//restauro el color	(POP)
+		SetFillStyle(colorRelleno.Pattern, colorRelleno.Color);// restauro la configuracion de fillStyle (POP)
+
+	end;
 	
 	
 procedure generarInterfazHighScore ();
-//dibuja en pantalla la mejor puntuacion buscada en el archivo. Si no hay nignuna se ponen '0'
+//dibuja en pantalla la mejor puntuacion buscada en el archivo. Si no hay nignuna se ponen '00000'
 	var X,Y:integer;datos:archivo.arch;
 	dig,i:integer;
 	text,ceros:string;

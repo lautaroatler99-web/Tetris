@@ -39,7 +39,7 @@ limitesPieza=array[1..4] of integer; //vector que retrata el lateral de la pieza
 //							10: EXTRA: La figura I es un caso especial y se tiene que rotar manual
 
 
-procedure registrarAccion (var key:char;var P:figuras.pieza;var SP:figuras.pieza;var Grilla:tablero.grilla;var nivel:integer;var score:longint;var lineasTotales:integer;var blocks:integer;var gameOver:boolean);
+procedure registrarAccion (var key:char;var P:figuras.pieza;var SP:figuras.pieza;var Grilla:tablero.grilla;var nivel:integer;var score:longint; var highScore:longint;var lineasTotales:integer;var blocks:integer;var gameOver:boolean);
 procedure moverPieza(var key:char;var P:figuras.pieza;var grilla:tablero.grilla);
 
 
@@ -561,6 +561,7 @@ procedure finalizarCaida(var P:figuras.pieza;
 						 var Grilla:tablero.grilla;
 						 var nivel:integer;
 						 var score:longint;
+						 var highScore:longint;
 						 var lineasTotales:integer;
 						 var blocks:integer;
 						 var gameOver:boolean);
@@ -572,6 +573,10 @@ procedure finalizarCaida(var P:figuras.pieza;
 		interfaz.panelPiezaSiguiente(SP);
 		figuras.crearPiezaInicial(P, Grilla,gameOver);			//la pieza llego al final y se crea una nueva
 		interfaz.actualizarContBloques(blocks);
+		if (score>highScore) then begin
+			highScore:=score;
+			interfaz.actualizarHighScore(score);
+		end;
 	end;
 
 procedure registrarAccion 	(var key:char;
@@ -580,10 +585,11 @@ procedure registrarAccion 	(var key:char;
 							var Grilla:tablero.grilla;
 							var nivel:integer;
 							var score:longint;
+							var highScore:longint;
 							var lineasTotales:integer;
 							var blocks:integer;
 							var gameOver:boolean);
-							
+
 //procedimiento que interpreta la accion realizada
 	var
 	ok:boolean;
@@ -611,7 +617,7 @@ procedure registrarAccion 	(var key:char;
 					caidaRepentina(key, P, Grilla, bordeMovimiento,gameover);	//
 				ok:=puedeBajar(P,Grilla,bordeMovimiento);				//el bucle permite multiples caidas
 			end;
-			finalizarCaida(P,SP,Grilla,nivel,score,lineasTotales,blocks,gameOver);
+			finalizarCaida(P,SP,Grilla,nivel,score,highScore,lineasTotales,blocks,gameOver);
 		end
 		
 		//////// rotar //////////////
@@ -629,7 +635,7 @@ procedure registrarAccion 	(var key:char;
 				moverPieza(key,P,Grilla);
 			end
 			else
-				finalizarCaida(P,SP,Grilla,nivel,score,lineasTotales,blocks,gameOver);
+				finalizarCaida(P,SP,Grilla,nivel,score,highScore,lineasTotales,blocks,gameOver);
 		end
 		
 		//////// salir //////////////

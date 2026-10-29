@@ -17,7 +17,7 @@ procedure guardarResultados (player:recordPlayer; var filePlayer:arch);
 implementation
 
 procedure abrirArchivo(var filePlayer:arch);
-//abre el archivo de puntuaciones
+//abre el archivo de puntuaciones (no lo cierra. Eso lo maneja el procedimiento que lo invoca)
 	begin
 		assign(filePlayer,'records.dat');
 		

@@ -16,6 +16,24 @@ implementation
 ///////////////////////////////  JUEGO /////////////////////////////// 
 
 
+function conseguirHighScore ():longint;
+//funcion que busca en el archivo la mejor puntuacion y la retorna
+	var player:archivo.recordPlayer;
+		datos:archivo.arch;
+		score:integer;
+	begin
+		score:=0;
+		archivo.abrirArchivo(datos);	//abro el archivo
+		if (not (EOF(datos)) ) then begin
+			read(datos,player);		//si no esta vacio, consigo el primer elemento (el de mayor puntuacion)
+			score:=player.score;
+		end;
+		close(datos);				//cierro archivo
+		
+		conseguirHighScore:=score;
+	end;
+	
+	
 procedure jugar ();
 //inicia el juego Tetris.
 var key:char;
@@ -23,7 +41,7 @@ var key:char;
 	Grilla:tablero.grilla;	//mapa del juego
 	tiempo, tiempoActual: Qword;	//numeros sin signo
 	nivel,lineasTotales:integer;
-	score:longint;
+	score,highScore:longint;
 	intervalo:integer;
 	gameOver:boolean;
 	blocks:integer;
@@ -31,6 +49,8 @@ var key:char;
 	filePlayer:archivo.arch;
 	name:string[7];
 	begin					//tablero principal 10*20;
+		
+		highScore:=conseguirHighScore();
 		gameOver:=false;
 
 		score:=0;
@@ -63,7 +83,7 @@ var key:char;
 				end;
 				
 				if ( (key='a') or (key='d') or (key='s') or (key='w') or (key='q') or (key=#27{esc}) ) then
-					movimiento.registrarAccion(key,P,SP,grilla,nivel,score,lineasTotales,blocks,gameOver);
+					movimiento.registrarAccion(key,P,SP,grilla,nivel,score,highScore,lineasTotales,blocks,gameOver);
 			end;
 			
 			intervalo:=1100 - nivel*100;    //al principio queda en 1000ms
@@ -73,7 +93,7 @@ var key:char;
 						
 			if ((tiempoActual - tiempo) >= intervalo) then begin
 				key:='t';				//se envia t para que caiga por segundo
-				movimiento.registrarAccion(key, P, SP, Grilla,nivel,score,lineasTotales,blocks,gameOver);
+				movimiento.registrarAccion(key, P, SP, Grilla,nivel,score,highScore,lineasTotales,blocks,gameOver);
 				tiempo:=tiempoActual;
 			end;
 		end;
@@ -82,7 +102,7 @@ var key:char;
 		player.score:=score;
 		player.level:=nivel;
 		player.lines:=lineasTotales;
-		//if (player.score<>0) then	//solo se guarda si hizo mas de 0 puntos
+		if (player.score<>0) then	//solo se guarda si hizo mas de 0 puntos
 			archivo.guardarResultados(player,filePlayer);
 	end;
 
@@ -277,7 +297,7 @@ procedure posicionPuntuacion (var X:integer;var Y:integer);
 procedure mostrarEncabezados (X:integer;Y:integer);
 //muestra los encabezados del score
 	begin
-		X:=X+150;
+		X:=X+140;
 		outTextXY(X,Y, 'name');
 		X:=X+200;
 		outTextXY(X,Y, 'score' );
