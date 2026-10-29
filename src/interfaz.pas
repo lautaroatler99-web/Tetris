@@ -109,6 +109,34 @@ var tam,color,lightColor,X,Y:integer;
 		bar(x+1,y+1,x+tam-1,y+tam-1);		//imprimo bloque
 		rectangle(x+1,y+1,x+tam-1,y+tam-1); //imprimo borde
 	end;
+
+
+procedure mensajeGameOver();
+//imprime un mensaje luego de perder
+var X1,Y1,X2,Y2:integer;
+	begin
+		X1:=pixelX(3);
+		Y1:=pixelY(9);
+		X2:=pixelX(11);
+		Y2:=PixelY(13);
+		
+		setFillStyle(solidFill,blue);
+		bar (X1,Y1,X2,Y2 );
+		setColor(red);
+		
+		SetLineStyle(SolidLn, 0, ThickWidth);	//la linea es mas gruesa
+		
+		rectangle (X1,Y1,X2,Y2 );
+		
+		setColor(lightRed);
+		outTextXY(X1+15,Y1+30,'Game Over');
+		setColor(white);
+		
+		settextstyle(0,0,2); //tamaño de letra
+		
+		outTextXY(X1+15,Y1+70,'Press any key');
+		readkey;
+	end;
 	
 procedure finalizarPartida(Grilla:tablero.grilla);
 	//recorre la grilla en espiral pintando todo a su paso
@@ -126,7 +154,7 @@ var i,j:integer;
 			//IZQUIERDA A DERECHA
 			for j:=colMin to colMax do begin
 				crearBloque(grilla,filaMin,j);
-				delay(25);
+				delay(10);
 				if (keypressed) then
 					exit;
 			end;
@@ -135,7 +163,7 @@ var i,j:integer;
 			//ARRIBA A ABAJO
 			for i:=filaMin to filaMax do begin
 				crearBloque(grilla,i,colMax);
-				delay(25);
+				delay(10);
 				if (keypressed) then
 					exit;
 			end;
@@ -144,7 +172,7 @@ var i,j:integer;
 			//ABAJO A ARRIBA
 			for j:=colMax downto colMin do begin
 				crearBloque(grilla,filaMax,j);
-				delay(25);
+				delay(10);
 				if (keypressed) then
 					exit;
 			end;
@@ -154,14 +182,13 @@ var i,j:integer;
 			
 			for i:=filaMax downto filaMin do begin
 				crearBloque(grilla,i,colMin);
-				delay(25);
+				delay(10);
 				if (keypressed) then
 					exit;
 			end;
 			colMin:=colMin+1;
 		end;
-		
-		readkey;
+		mensajeGameOver();
 	end;
 
 
