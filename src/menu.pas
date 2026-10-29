@@ -44,7 +44,7 @@ var key:char;
 	nivel,lineasTotales:integer;
 	score,highScore:longint;
 	intervalo,blocks:integer;
-	gameOver:boolean;
+	gameOver,quit:boolean;
 	player:archivo.recordPlayer;
 	filePlayer:archivo.arch;
 	name:string[7];
@@ -52,7 +52,8 @@ var key:char;
 		
 		highScore:=conseguirHighScore();
 		gameOver:=false;
-
+		quit:=false;
+		
 		score:=0;
 		nivel:=1;
 		lineasTotales:=0;
@@ -69,7 +70,7 @@ var key:char;
 		panelPiezaSiguiente(SP);		//creo la pieza siguiente en la interfaz
 		tiempo:=getTickCount64;
 		
-		while (not gameOver) do begin
+		while ( (not gameOver) and (not quit) ) do begin
 			tiempoActual:=GetTickCount64;
 			
 			if keypressed then begin
@@ -86,7 +87,7 @@ var key:char;
 				end;
 				
 				if ( (key='a') or (key='d') or (key='s') or (key='w') or (key='q') or (key=#27{esc}) ) then
-					movimiento.registrarAccion(key,P,SP,grilla,nivel,score,highScore,lineasTotales,blocks,gameOver);
+					movimiento.registrarAccion(key,P,SP,grilla,nivel,score,highScore,lineasTotales,blocks,gameOver,quit);
 			end;
 			
 			intervalo:=1100 - nivel*100;    //al principio queda en 1000ms
@@ -96,7 +97,7 @@ var key:char;
 						
 			if ((tiempoActual - tiempo) >= intervalo) then begin
 				key:='t';				//se envia t para que caiga por segundo
-				movimiento.registrarAccion(key, P, SP, Grilla,nivel,score,highScore,lineasTotales,blocks,gameOver);
+				movimiento.registrarAccion(key, P, SP, Grilla,nivel,score,highScore,lineasTotales,blocks,gameOver,quit);
 				tiempo:=tiempoActual;
 			end;
 		end;
@@ -107,6 +108,8 @@ var key:char;
 		player.lines:=lineasTotales;
 		if (player.score<>0) then	//solo se guarda si hizo mas de 0 puntos
 			archivo.guardarResultados(player,filePlayer);
+		if (gameover) then
+			interfaz.finalizarPartida(Grilla);
 	end;
 
 ////////////////////////////////////////////////////////////// 

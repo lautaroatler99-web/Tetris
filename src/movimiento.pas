@@ -39,7 +39,18 @@ limitesPieza=array[1..4] of integer; //vector que retrata el lateral de la pieza
 //							10: EXTRA: La figura I es un caso especial y se tiene que rotar manual
 
 
-procedure registrarAccion (var key:char;var P:figuras.pieza;var SP:figuras.pieza;var Grilla:tablero.grilla;var nivel:integer;var score:longint; var highScore:longint;var lineasTotales:integer;var blocks:integer;var gameOver:boolean);
+procedure registrarAccion (	var key:char;
+							var P:figuras.pieza;
+							var SP:figuras.pieza;
+							var Grilla:tablero.grilla;
+							var nivel:integer;
+							var score:longint;
+							var highScore:longint;
+							var lineasTotales:integer;
+							var blocks:integer;
+							var gameOver:boolean;
+							var quit:boolean);
+
 procedure moverPieza(var key:char;var P:figuras.pieza;var grilla:tablero.grilla);
 
 
@@ -507,14 +518,14 @@ function permitirMovimiento(key:char;P:figuras.pieza; Grilla:tablero.grilla; bor
 	end;
 	
 	
-procedure caidaRepentina(key:char;var P:figuras.pieza;var Grilla:tablero.Grilla; bordeMovimiento:limitesPieza;var gameover:boolean);
+procedure caidaRepentina(key:char;var P:figuras.pieza;var Grilla:tablero.Grilla; bordeMovimiento:limitesPieza;var quit:boolean);
 //registra la caida progresiva y permite la interaccion de otros movimientos en el transcurso. Una vez que toca piso,
 //permite un ultimo movimiento
 var ok:boolean;
 	begin
 		ok:=puedeBajar(P,Grilla,bordeMovimiento);
 		
-		while (ok) and not (gameover) do begin
+		while (ok) and not (quit) do begin
 			delay(75);
 			if keypressed then begin		//se puede mover mientras cae
 				key:=readkey;
@@ -531,7 +542,7 @@ var ok:boolean;
 				end;
 				
 				if (key='q') then begin
-					gameover:=true;
+					quit:=true;
 					exit;
 				end;
 				if (key=#27) then			//pausa en caida
@@ -588,7 +599,8 @@ procedure registrarAccion 	(var key:char;
 							var highScore:longint;
 							var lineasTotales:integer;
 							var blocks:integer;
-							var gameOver:boolean);
+							var gameOver:boolean;
+							var quit:boolean);
 
 //procedimiento que interpreta la accion realizada
 	var
@@ -610,11 +622,11 @@ procedure registrarAccion 	(var key:char;
 		
 		else if (key='s') then begin 
 			ok:=puedeBajar(P,Grilla,bordeMovimiento);
-			while (ok) and not(gameover) do begin
-				caidaRepentina(key, P, Grilla, bordeMovimiento,gameover);	//la pieza cae hasta tocar piso
+			while (ok) and not(quit) do begin
+				caidaRepentina(key, P, Grilla, bordeMovimiento,quit);	//la pieza cae hasta tocar piso
 				
 				if (puedeBajar(P,Grilla,bordeMovimiento)) then			//si despues de moverse sigue en el aire, continua cayendo
-					caidaRepentina(key, P, Grilla, bordeMovimiento,gameover);	//
+					caidaRepentina(key, P, Grilla, bordeMovimiento,quit);	//
 				ok:=puedeBajar(P,Grilla,bordeMovimiento);				//el bucle permite multiples caidas
 			end;
 			finalizarCaida(P,SP,Grilla,nivel,score,highScore,lineasTotales,blocks,gameOver);
@@ -640,7 +652,7 @@ procedure registrarAccion 	(var key:char;
 		
 		//////// salir //////////////
 		else if (key='q') then begin
-			gameOver:=true;
+			quit:=true;
 		end
 		//////// pausa //////////////
 		
