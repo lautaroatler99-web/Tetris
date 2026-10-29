@@ -126,7 +126,19 @@ procedure posicionControles (var X:integer; var Y:integer);
 		Y:=pixelY(15);
 	end;
 
-
+procedure verison ();
+//imprime en pantalla la version del juego
+var X,Y:integer;text:string;
+	begin
+		settextstyle(0,0,2); //tamaño de letra
+		setColor(lightgray);
+		text:='V 1.0.0';
+		X:=0;
+		Y:=getMaxY;
+		outTextXY(X +10,Y - textheight(text) -10,text);
+	end;
+	
+	
 procedure mostrarFirma ();
 //firma del proyecto
 var X,Y:integer;text:string;
@@ -243,7 +255,7 @@ procedure interfazMenu(var P:puntos;distancia:integer);
 var X1,X2,Y1,Y2:integer;
 	begin
 		mostrarFirma();
-		
+		verison ();
 		mostrarControles();
 		
 		setColor(white);
