@@ -10,6 +10,7 @@ type
 puntos=array [1..6] of integer; //array de coordenadas para rellenar el triangulo
 
 procedure inicio();
+procedure iniciarGraficos();
 
 implementation
 
@@ -408,8 +409,7 @@ var opcion:integer;key:char;
 						//jugar
 						jugar();
 						//al salir de jugar se vuelve al menu
-						closegraph;
-						iniciarGraficos();
+						iniciarFondo();
 						interfazMenu(P,distancia);
 					end;
 					2:begin
@@ -434,7 +434,6 @@ var P:puntos; distancia:integer;
 	begin
 		ok:=true;
 		distancia:=70; 				//pixeles de distancia para crear los cuadros de la interfaz
-		iniciarGraficos();			//inicio los graficos
 		interfazMenu(P,distancia);	//creo la interfaz del menu
 		accion(ok,P,distancia);		//elijo una opcion
 		closegraph;
