@@ -658,6 +658,7 @@ var X,Y,cant:integer;ok:boolean;c:char;
 		name:='';
 		cant:=0;
 		ok:=false;
+		outTextXY(X ,Y,'_');
 		while (not ok) do begin
 			c:=readkey;
 			if (c=#13) then //enter
