@@ -50,7 +50,6 @@ var key:char;
 	name:string[7];
 	begin					//tablero principal 10*20;
 		
-		highScore:=conseguirHighScore();
 		gameOver:=false;
 		quit:=false;
 		
@@ -61,6 +60,7 @@ var key:char;
 		//pedimos nombre:
 		
 		name:=interfaz.ingresarNombre(); //se ingresa el nombre del jugador
+		highScore:=conseguirHighScore();	//se obtiene la mejor puntuacion
 		
 		//iniciamos la inerfaz de juego	
 		interfaz.iniciarJuego(Grilla);
