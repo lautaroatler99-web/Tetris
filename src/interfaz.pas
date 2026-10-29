@@ -388,12 +388,12 @@ procedure actualizarHighScore(highScore:longint);
 		
 		borrarPixelHighScore(X,Y);
 		
-		setColor(white);
 		dig:=digitosScore(highScore);
 		ceros:='';
 		for i:=1 to 5-dig do		//la puntuacion tiene 5 digitos. Se agregan
 			ceros:=ceros+'0';			//tantos 0 como la diferencia entre digitos y SCORE
 		
+		setColor(green);
 		outTextXY( X+50,Y+40, ceros+IntToStr(highScore));		//piso el valor de la puntuacion
 		
 		setColor(color); 	//restauro el color	(POP)
@@ -413,7 +413,7 @@ procedure generarInterfazHighScore ();
 		archivo.abrirArchivo(datos);	//abro el archivo
 		
 		posicionHighScore(X,Y);
-		
+
 		outTextXY(X,Y,text);			//imprimo 'high score'
 		
 		if (not EOF(datos)) then begin	//compruebo si no esta vacio
@@ -428,6 +428,16 @@ procedure generarInterfazHighScore ();
 		end
 		else
 			outTextXY( X + 50,Y+40,'00000' );
+		
+		SetLineStyle(SolidLn, 0, ThickWidth);	//la linea es mas gruesa
+		
+		setColor(lightgray);
+		rectangle(X-20,Y-20,X+textwidth(text)+15,Y+80);
+		
+		SetLineStyle(SolidLn, 0, NormWidth);	//pongo el grosor de la linea a la normalidad
+		
+		
+		
 		close (datos);
 	end;
 
