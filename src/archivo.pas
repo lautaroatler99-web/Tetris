@@ -39,7 +39,7 @@ var P:recordPlayer;encontre:boolean;
 		abrirArchivo (filePlayer);
 		while ( (not EOF (filePlayer)) and (not encontre) ) do begin	//si el archivo no llego al final..
 			read (filePlayer,P);	//leo los jugadores
-			if (player.score>P.score) then
+			if (player.score>=P.score) then
 				encontre:=true;
 		end;
 		if (encontre) then begin
@@ -50,6 +50,7 @@ var P:recordPlayer;encontre:boolean;
 				write(filePlayer,player);						//sobreescribo el valor
 				player:=P;										//ahora player tiene el jugador anterior
 			end;
+			write(filePlayer,player);
 		end
 		else begin	//no hay jugador con puntuacion mas alta, se guarda en el ultimo puesto
 			seek(filePlayer,filesize(filePlayer)); 	//me desplazo a la ultima posicion del archivo
