@@ -296,7 +296,22 @@ procedure posicionPuntuacion (var X:integer;var Y:integer);
 	
 procedure mostrarEncabezados (X:integer;Y:integer);
 //muestra los encabezados del score
+	var color:integer;
+	centro:integer;
 	begin
+		color:=getColor;	//guardo color
+		setColor(white);
+		
+		//la variable centro es la suma de todo lo que ocupan los encabezados + sus pixeles de distancia (740)
+		
+		centro:=740 + textWidth('name') + textWidth('score') + textWidth('level') + textWidth('lines');
+		centro:=centro div 2;		//div 2 nos da el centro de este resultado
+		
+		outTextXY( (X + centro - textWidth('Press any key')),	//se le resta el texto a poner
+					Y-60,
+					'Press any key');
+		
+		setColor(color);	//devuelvo el color
 		X:=X+140;
 		outTextXY(X,Y, 'name');
 		X:=X+200;
@@ -347,7 +362,7 @@ var filePlayer:archivo.arch; player:archivo.recordPlayer;
 			read(filePlayer,player);				//guardo la informacion del archivo en player
 				
 			imprimirPuntuacion(player,X,Y,i);
-			Y:=Y++40; 				//desplazamiento
+			Y:=Y+40; 				//desplazamiento
 		end;
 
 		close(filePlayer);
