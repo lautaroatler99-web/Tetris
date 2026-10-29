@@ -442,7 +442,7 @@ procedure generarInterfazHighScore ();
 	end;
 
 
-////////////////////////////////////////////// INTERFAZ LINEA //////////////////////////////////////////////
+////////////////////////////////////////////// INTERFAZ CONTADOR DE LINEAS //////////////////////////////////////////////
 
 procedure posicionLineas(var X:integer; var Y:integer);
 //devuelve las posiciones XY del contador de lineas
@@ -587,6 +587,14 @@ var X,Y:integer;
 
 //////////////////////////////////////////////////////////////////////////////////////////// 
 
+procedure generarTituloTETRIS ();
+//crea el titulo 'Tetris' arriba del juego
+	begin
+		setColor(cyan);
+		settextstyle(0,0,3); //tamaño de letra
+		outTextXY(pixelX(5),pixelY(-1),'Tetris');
+	end;
+	
 
 procedure iniciarFondo();
 //pinta toda la pantalla del color de fondo
@@ -678,6 +686,7 @@ var x0,y0:integer;	//posiciones del inicio
 		/////////////	INTERFAZ	/////////////
 		iniciarFondo();
 		crearMarco(G,x0,y0);			//crea el borde de cuadros
+		generarTituloTETRIS();
 		generarInterfazPuntuacion();	//puntacion
 		generarInterfazSigPieza();			//sig pieza
 		generarInterfazNivel(); 		//nivel
