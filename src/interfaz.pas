@@ -18,6 +18,7 @@ procedure panelPiezaSiguiente(SP:figuras.pieza);
 procedure actualizarContBloques (var blocks:integer);
 procedure iniciarFondo();
 procedure actualizarHighScore(highScore:longint);
+function ingresarNombre():string;
 
 implementation
 
@@ -623,9 +624,63 @@ procedure borrarCuadroPausa (X1,Y1:integer;var imagen:pointer;tamanio:integer);
 		PutImage(X1, Y1, imagen^, NormalPut);	//pongo la imagen guardada
 		FreeMem(imagen, tamanio);			//libero la memoria
 	end;
+
+procedure borrarLetra(X,Y:integer);
+	var colorRelleno:FillSettingsType;
+	var text:string;
+	begin
+		getFillSettings(colorRelleno); 	//guardo la configuracion de fillstyle actual (PUSH)
+		
+		setFillStyle(solidFill, fondo); //cambio color
+		text:='qqqqqqq';			//variable para simular el ancho y largo en pixeles;
+		
+		bar(X,Y,X+textWidth(text),Y+textHeight(text));
+		
+		SetFillStyle(colorRelleno.Pattern, colorRelleno.Color);// restauro la configuracion de fillStyle (POP)
+	end;
 	
 	
 ////////////////////////////////////////////// FUNCIONES PUBLICAS //////////////////////////////////////////////
+
+
+function ingresarNombre():string;
+var X,Y,cant:integer;ok:boolean;c:char;
+	name:string;
+	begin
+		iniciarFondo();			//tapamos todo
+		X:=(getMaxX div 2);
+		Y:=(getMaxY div 2);
+		outTextXY(X - (textWidth('Enter name') div 2),Y-200,'Enter name');
+		setColor(white);
+		
+		X:=X - ((textWidth('Enter name') div 2) div 2)-30;
+		Y:=Y-100;
+		name:='';
+		cant:=0;
+		ok:=false;
+		while (not ok) do begin
+			c:=readkey;
+			if (c=#13) then //enter
+				ok:=true
+			else
+			if (c=#8) then begin	//backspace
+				if (cant>0) then begin
+					delete(name , length(name), 1); //borro la ultima letra
+					cant:=cant-1;
+				end;
+			end
+			else
+			if ( (cant<7) and (c>=' ') ) then begin 	//solo hasta 7 caracteres
+														//(c>= ' ') permite solo caracteres imprimibles
+				cant:=cant+1;
+				name:=name+c;
+			end;
+			
+			borrarLetra(X,Y);
+			outTextXY(X ,Y,name);		//imprimo el nombre actualizado
+		end;
+		ingresarNombre:=name;
+	end;
 
 
 procedure sumarPuntos (lineasCompletadas,nivel:integer;var score:longint);

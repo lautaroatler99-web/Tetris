@@ -43,9 +43,8 @@ var key:char;
 	tiempo, tiempoActual: Qword;	//numeros sin signo
 	nivel,lineasTotales:integer;
 	score,highScore:longint;
-	intervalo:integer;
+	intervalo,blocks:integer;
 	gameOver:boolean;
-	blocks:integer;
 	player:archivo.recordPlayer;
 	filePlayer:archivo.arch;
 	name:string[7];
@@ -58,7 +57,10 @@ var key:char;
 		nivel:=1;
 		lineasTotales:=0;
 		blocks:=0;
-			
+		//pedimos nombre:
+		
+		name:=interfaz.ingresarNombre(); //se ingresa el nombre del jugador
+		
 		//iniciamos la inerfaz de juego	
 		interfaz.iniciarJuego(Grilla);
 		figuras.elegirPieza(P);			//se elije la primera pieza
