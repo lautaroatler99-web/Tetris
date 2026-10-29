@@ -5,7 +5,7 @@ interface
 
 //las dimensiones del cuadro es X=800-1000, Y=200-800, tamaño=30;
 
-uses graph,wincrt,SysUtils,figuras,tablero;
+uses graph,wincrt,SysUtils,figuras,tablero,archivo;
 	
 
 procedure iniciarJuego(var G:grilla);
@@ -354,6 +354,46 @@ var Xscore,Xrectangle,
 		SetLineStyle(SolidLn, 0, NormWidth);	//pongo el grosor de la linea a la normalidad
 	end;
 
+
+////////////////////////////////////////////// HIGH SCORE //////////////////////////////////////////////
+
+procedure posicionHighScore(var X:integer; var Y:integer);
+	begin
+		X:=pixelX(14);
+		Y:=pixelY(8)+10;
+	end;
+	
+	
+procedure generarInterfazHighScore ();
+//dibuja en pantalla la mejor puntuacion buscada en el archivo. Si no hay nignuna se ponen '0'
+	var X,Y:integer;datos:archivo.arch;
+	dig,i:integer;
+	text,ceros:string;
+	player:archivo.recordPlayer;
+	begin
+		text:='High Score';
+		archivo.abrirArchivo(datos);	//abro el archivo
+		
+		posicionHighScore(X,Y);
+		
+		outTextXY(X,Y,text);			//imprimo 'high score'
+		
+		if (not EOF(datos)) then begin	//compruebo si no esta vacio
+			read(datos,player);			//la primera posicion es la mas alta
+			
+			dig:=digitosScore(player.score);	//calculo los digitos del score
+			ceros:='';
+			for i:=1 to 5-dig do		//la puntuacion tiene 5 digitos. Se agregan
+				ceros:=ceros+'0';		//tantos 0 como la diferencia entre digitos y high score
+		
+			outTextXY( X+50,Y+40, ceros+IntToStr(player.score));		//piso el valor de high score
+		end
+		else
+			outTextXY( X + 50,Y+40,'00000' );
+		close (datos);
+	end;
+
+
 ////////////////////////////////////////////// INTERFAZ LINEA //////////////////////////////////////////////
 
 procedure posicionLineas(var X:integer; var Y:integer);
@@ -596,5 +636,6 @@ var x0,y0:integer;	//posiciones del inicio
 		generarInterfazLinea();			//lineas totales
 		generarInterfazControles();		//muestra los controles
 		interfazContBloques(0);		//muestra cant bloques
+		generarInterfazHighScore();
 	end;
 end.
