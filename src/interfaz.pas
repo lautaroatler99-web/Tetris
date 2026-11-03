@@ -615,7 +615,7 @@ var X,Y:integer;
 		posicionControles(X,Y);
 	
 		setColor(lightBlue);
-		outTextXY (X,Y,'A / '+#27+' : Up');
+		outTextXY (X,Y,'A / '+#27+' : Left');
 		setColor(lightRed);
 		Y:=Y+40;
 		outTextXY (X,Y,'D / '+#26+' : Right');
