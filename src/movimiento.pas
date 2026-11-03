@@ -598,10 +598,11 @@ procedure registrarAccion 	(var key:char;
 		//////// izquierda/derecha //////////////
 		
 		if ( (key='a') or (key='d') ) then begin
-			borrarPiezaFantasma(P,Grilla,bordeMovimiento);	//borro la anterior pieza fantasma
-			if (permitirMovimiento(key,P,Grilla,bordeMovimiento)) then
+			if (permitirMovimiento(key,P,Grilla,bordeMovimiento)) then begin
+				borrarPiezaFantasma(P,Grilla,bordeMovimiento);	//borro la anterior pieza fantasma
 				moverPieza(key,P, Grilla);
-			posicionFantasma(P,Grilla);		//creo la nueva pieza fantasma
+				posicionFantasma(P,Grilla);		//creo la nueva pieza fantasma
+			end;
 		end
 		
 		//////// caida abrupta //////////////
@@ -626,19 +627,18 @@ procedure registrarAccion 	(var key:char;
 		//////// rotar //////////////
 		
 		else if (key='w') then begin
-			borrarPiezaFantasma(P,Grilla,bordeMovimiento);		//borro la anterior pieza fantasma
-			if (p.rotacion) then
+			if (p.rotacion) then begin
+				borrarPiezaFantasma(P,Grilla,bordeMovimiento);		//borro la anterior pieza fantasma
 				moverPieza(key,P, Grilla);
-			posicionFantasma(P,Grilla);		//creo la nueva pieza fantasma ya rotada
+				posicionFantasma(P,Grilla);		//creo la nueva pieza fantasma ya rotada
+			end;
 		end
 		
 		//////// tiempo //////////////
 		
 		else if (key='t') then begin			//baja una posicion por cada segundo relativo al nivel
-			if (puedeBajar(P,Grilla,bordeMovimiento)) then begin
-				delay(75);
-				moverPieza(key,P,Grilla);
-			end
+			if (puedeBajar(P,Grilla,bordeMovimiento)) then
+				moverPieza(key,P,Grilla)
 			else
 				finalizarCaida(P,SP,Grilla,nivel,score,highScore,lineasTotales,blocks,gameOver);
 		end
