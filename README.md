@@ -52,23 +52,23 @@ Características adicionales:
 Screenshots:
 
 #menu
-[menu](assets/menu.png)
+![menu](assets/menu.png)
 
 #inicio
 ![inicio del juego](assets/image_1.png)
 
 #juego avanzado
-[progreso de juego](assets/image_2.png)
+![progreso de juego](assets/image_2.png)
 
 #pausa
-[pausa](assets/image_3.png)
+![pausa](assets/image_3.png)
 
 #game over
-[game over](assets/image_4.png)
+![game over](assets/image_4.png)
 
 #score
-[puntuación](assets/image_5.png)
+![puntuación](assets/image_5.png)
 
 #ingresar nombre
-[ingresar nombre](assets/image_6.png)
+![ingresar nombre](assets/image_6.png)
 	
