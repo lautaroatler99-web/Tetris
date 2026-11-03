@@ -48,3 +48,8 @@ Características adicionales:
 
 	- El juego cuenta con una tabla de puntuación donde queda registrado si el jugador logra completar almenos una línea.
     - Los registros se almacenan en un archivo generado en records/records.dat, permitiendo conservar las puntuaciones entre ejecuciones de juego.
+
+Screenshots:
+
+![inicio del juego](assets/image_1.png)
+	
