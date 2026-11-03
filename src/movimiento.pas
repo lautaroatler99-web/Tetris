@@ -4,7 +4,7 @@ unit movimiento;
 interface
 
 uses graph,wincrt,tablero,figuras,interfaz;
-
+procedure posicionFantasma (P:pieza; var Grilla:tablero.grilla);
 type
 
 limitesPieza=array[1..4] of integer; //vector que retrata el lateral de la pieza
@@ -517,6 +517,26 @@ function permitirMovimiento(key:char;P:figuras.pieza; Grilla:tablero.grilla; bor
 	end;
 	
 
+procedure posicionFantasma (P:pieza; var Grilla:tablero.grilla);
+//calcula la posicion de la pieza fantasma y la dibuja. Solo se ejecuta para movimientos laterales (A,D) o rotacion (W)
+var ok:boolean;i,j:integer;piso:limitesPieza;
+	
+	begin
+		for i:=1 to 4 do	//inicializo vector
+			piso[i]:=0;
+			
+		ok:=puedeBajar(P,Grilla,piso);
+		while (ok) do begin
+			for i := 1 to 4 do	// mientras no choque, sigo desplazandola hacia abajo
+				for j := 1 to 4 do
+					if P.posValida[i,j] then
+						P.posBloque[i,j].Y:= P.posBloque[i,j].Y + 1;
+			ok:=puedeBajar(P,Grilla,piso)
+		end;
+		interfaz.dibujarPiezaFantasma (P,grilla);	//una vez calculada, la dibujo
+	end;
+
+
 procedure finalizarCaida(var P:figuras.pieza;
 						 var SP:figuras.pieza;
 						 var Grilla:tablero.grilla;
@@ -538,7 +558,20 @@ procedure finalizarCaida(var P:figuras.pieza;
 			highScore:=score;
 			interfaz.actualizarHighScore(score);
 		end;
+		posicionFantasma(P,Grilla);	//dibujo la posicion fantasma de la nueva pieza
 	end;
+
+
+procedure borrarPiezaFantasma (P:pieza; var Grilla:tablero.grilla; bordeMovimiento:limitesPieza);
+// pinta los pixeles de la pieza fantasma con los del fondo, borrandola
+var color:integer;
+	begin
+		color:=getColor;			//guardo color
+		setColor(fondo);			//elijo color del fondo
+		posicionFantasma(P, Grilla);	//piso los pixeles con color del fondo
+		setColor(color);			//restauro color
+	end;
+
 
 procedure registrarAccion 	(var key:char;
 							var P:figuras.pieza;
@@ -558,14 +591,17 @@ procedure registrarAccion 	(var key:char;
 	i:integer;
 	bordeMovimiento:limitesPieza;
 	begin
+		
 		for i:=1 to 4 do 	//inicializo el vector de colision
 			bordeMovimiento[i]:=0; //variable para identificar los extremos laterales o inferiores de la pieza
 		
 		//////// izquierda/derecha //////////////
 		
 		if ( (key='a') or (key='d') ) then begin
+			borrarPiezaFantasma(P,Grilla,bordeMovimiento);	//borro la anterior pieza fantasma
 			if (permitirMovimiento(key,P,Grilla,bordeMovimiento)) then
 				moverPieza(key,P, Grilla);
+			posicionFantasma(P,Grilla);		//creo la nueva pieza fantasma
 		end
 		
 		//////// caida abrupta //////////////
@@ -590,8 +626,10 @@ procedure registrarAccion 	(var key:char;
 		//////// rotar //////////////
 		
 		else if (key='w') then begin
+			borrarPiezaFantasma(P,Grilla,bordeMovimiento);		//borro la anterior pieza fantasma
 			if (p.rotacion) then
 				moverPieza(key,P, Grilla);
+			posicionFantasma(P,Grilla);		//creo la nueva pieza fantasma ya rotada
 		end
 		
 		//////// tiempo //////////////

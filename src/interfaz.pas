@@ -20,6 +20,7 @@ procedure borrarPantalla();
 procedure actualizarHighScore(highScore:longint);
 function ingresarNombre():string;
 procedure finalizarPartida(Grilla:tablero.grilla);
+procedure dibujarPiezaFantasma (P:pieza; var Grilla:tablero.grilla);
 
 implementation
 
@@ -745,6 +746,22 @@ procedure borrarLetra(X,Y:integer);
 	
 	
 ////////////////////////////////////////////// FUNCIONES PUBLICAS //////////////////////////////////////////////
+	
+
+procedure dibujarPiezaFantasma (P:pieza; var Grilla:tablero.grilla);
+//crea la silueta de la pieza actual en el final del tablero
+var i,j,tam,x,y:integer;
+	begin
+		tam:=30;//tamaño de cada cuadro
+		for i:=1 to max do 
+			for j:=1 to max do 
+				if (P.posValida[i,j]) then begin
+					x:=Grilla.pos[P.posBloque[i,j].Y , P.posBloque[i,j].X].X;
+					y:=Grilla.pos[P.posBloque[i,j].Y , P.posBloque[i,j].X].Y;
+					
+					rectangle(x+1,y+1,x+tam-1,y+tam-1);
+				end;
+	end;
 
 
 function ingresarNombre():string;

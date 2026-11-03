@@ -69,7 +69,7 @@ var key:char;
 		figuras.crearPiezaInicial(P,Grilla,gameOver);	//se crea la primera pieza en la pos central superior
 		panelPiezaSiguiente(SP);		//creo la pieza siguiente en la interfaz
 		tiempo:=getTickCount64;
-		
+		movimiento.posicionFantasma(P,Grilla);	//dibujo la posicion fantasma de la nueva pieza
 		while ( (not gameOver) and (not quit) ) do begin
 			tiempoActual:=GetTickCount64;
 			
