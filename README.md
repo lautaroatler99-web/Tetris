@@ -9,6 +9,7 @@ El objetivo del juego es acomodar las piezas que van descendiendo para completar
 El proyecto fue desarrollado como una implementación de dicho juego, poniendo en práctica conceptos de programación, gestión de archivos, lógica y estructuras de control.
 
 Características:
+
 	- Movimiento de piezas.
 	- Rotación de bloques.
 	- Detección y eliminacion de líneas completadas.
@@ -18,16 +19,19 @@ Características:
 
 
 Tecnologías utilizadas:
+
 		- Pascal
 		- Compilador utilizado: Free pascal.
 
 Ejecución:
+
 		1. Clonar o descargar este repositorio.
 		2. Abrir el proyecto con el entorno o compilador correspondiente.
 		3. Compilar el código fuente.
 		4. Ejecutar el programa generado .exe
 
 Controles:
+
 		A / flecha izquierda : Mover pieza a la izquierda.
 		D / flecha derecha : Mover pieza a la derecha.
 		W / flecha arriba : Rotar pieza.
@@ -37,8 +41,10 @@ Controles:
 		Esc: Pausa.
 
 Autor:
+
 	Desarrollado por Lautaro Atler
 
 Características adicionales:
+
 	- El juego cuenta con una tabla de puntuación donde queda registrado si el jugador logra completar almenos una línea.
-        - Los registros se almacenan en un archivo generado en records/records.dat, permitiendo conservar las puntuaciones entre ejecuciones de juego.
+    - Los registros se almacenan en un archivo generado en records/records.dat, permitiendo conservar las puntuaciones entre ejecuciones de juego.
