@@ -613,18 +613,21 @@ procedure generarInterfazControles();
 var X,Y:integer;
 	begin
 		posicionControles(X,Y);
-		
+	
 		setColor(lightBlue);
-		outTextXY (X,Y,'A / '+#27+' : Left');
+		outTextXY (X,Y,'A / '+#27+' : Up');
 		setColor(lightRed);
 		Y:=Y+40;
 		outTextXY (X,Y,'D / '+#26+' : Right');
 		setColor(lightGreen);
 		Y:=Y+40;
-		outTextXY (X,Y,'S / '+#25+': Drop');
+		outTextXY (X,Y,'S / '+#25+': Down');
 		setColor(lightMagenta);
 		Y:=Y+40;
 		outTextXY (X,Y,'W / '+#24+': Rotate');
+		setColor(red);
+		Y:=Y+40;
+		outTextXY (X,Y,'Space: Drop');
 		setColor(yellow);
 		Y:=Y+40;
 		outTextXY(X,Y,'Q: quit');

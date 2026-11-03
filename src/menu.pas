@@ -86,7 +86,7 @@ var key:char;
 					end;
 				end;
 				
-				if ( (key='a') or (key='d') or (key='s') or (key='w') or (key='q') or (key=#27{esc}) ) then
+				if ( (key='a') or (key='d') or (key='s') or (key='w') or (key='q') or (key=#32) or (key=#27{esc}) ) then
 					movimiento.registrarAccion(key,P,SP,grilla,nivel,score,highScore,lineasTotales,blocks,gameOver,quit);
 			end;
 			
@@ -170,7 +170,7 @@ var X,Y,distancia:integer;
 		
 		distancia:=distancia+40;
 		
-		outTextXY(X,Y+distancia,'ENTER: select');
+		outTextXY(X,Y+distancia,'ENTER: Select');
 	end;
 
 

@@ -304,7 +304,6 @@ fila,columna,i:integer; ok:boolean;
 		
 		///////////////////////////////////////////////////////////////////////////
 		//esto es para la D (derecha)
-			
 		if (key='a') then begin
 			for i:=1 to 4 do
 				if (bordeMovimiento[i]<>0) then begin
@@ -383,12 +382,12 @@ procedure moverPieza(var key:char;var P:figuras.pieza;var grilla:tablero.grilla)
 	begin
 		desplY:=0;
 		desplX:=0;
-		if (key='a') or (key='d') or (key='s') or (key='t')then begin	//compruebo para separar los desplazamientos a un lado y la rotacion ('w') a otro
+		if (key='a') or (key='d') or (key='s') or (key='t') or (key=#32) then begin	//compruebo para separar los desplazamientos a un lado y la rotacion ('w') a otro
 			if (key= 'a') then
 				desplX := -1
 			else if (key= 'd') then
 				desplX:= 1
-			else if (key= 's') or (key = 't') then
+			else if (key= 's') or (key = 't') or (key=#32) then
 				desplY:=1;
 		
 			borrarPiezaColor(P, grilla);
@@ -609,27 +608,40 @@ procedure registrarAccion 	(var key:char;
 	bordeMovimiento:limitesPieza;
 	begin
 		for i:=1 to 4 do 	//inicializo el vector de colision
-			bordeMovimiento[i]:=0; //variable para identificar los extremos laterales de la pieza
+			bordeMovimiento[i]:=0; //variable para identificar los extremos laterales o inferiores de la pieza
 		
 		//////// izquierda/derecha //////////////
 		
 		if ( (key='a') or (key='d') ) then begin
-			if (permitirMovimiento(key,p,grilla,bordeMovimiento)) then
+			if (permitirMovimiento(key,P,Grilla,bordeMovimiento)) then
 				moverPieza(key,P, Grilla);
 		end
 		
-		//////// caida repentina //////////////
+		//////// caida abrupta //////////////
+		
+		else if (key=#32) then begin		//SPACE
+			ok:=puedeBajar(P,Grilla,bordeMovimiento);
+			while ( (ok) and not(quit) ) do begin
+				moverPieza(key,P,Grilla);
+				ok:=puedeBajar(P,Grilla,bordeMovimiento);
+			end;
+			finalizarCaida(P,SP,Grilla,nivel,score,highScore,lineasTotales,blocks,gameOver);
+		end
+		//////// caida //////////////
 		
 		else if (key='s') then begin 
-			ok:=puedeBajar(P,Grilla,bordeMovimiento);
-			while (ok) and not(quit) do begin
+			if (puedeBajar(P,Grilla,bordeMovimiento)) then
+				moverPieza(key,P, Grilla)
+			else
+				finalizarCaida(P,SP,Grilla,nivel,score,highScore,lineasTotales,blocks,gameOver);
+			{while (ok) and not(quit) do begin
 				caidaRepentina(key, P, Grilla, bordeMovimiento,quit);	//la pieza cae hasta tocar piso
 				
 				if (puedeBajar(P,Grilla,bordeMovimiento)) then			//si despues de moverse sigue en el aire, continua cayendo
 					caidaRepentina(key, P, Grilla, bordeMovimiento,quit);	//
 				ok:=puedeBajar(P,Grilla,bordeMovimiento);				//el bucle permite multiples caidas
 			end;
-			finalizarCaida(P,SP,Grilla,nivel,score,highScore,lineasTotales,blocks,gameOver);
+			finalizarCaida(P,SP,Grilla,nivel,score,highScore,lineasTotales,blocks,gameOver);}
 		end
 		
 		//////// rotar //////////////
@@ -642,7 +654,7 @@ procedure registrarAccion 	(var key:char;
 		//////// tiempo //////////////
 		
 		else if (key='t') then begin			//baja una posicion por cada segundo relativo al nivel
-			if puedeBajar(P,Grilla,bordeMovimiento) then begin
+			if (puedeBajar(P,Grilla,bordeMovimiento)) then begin
 				delay(75);
 				moverPieza(key,P,Grilla);
 			end
