@@ -608,7 +608,7 @@ procedure registrarAccion 	(var key:char;
 		
 		else if (key=#32) then begin		//SPACE
 			ok:=puedeBajar(P,Grilla,bordeMovimiento);
-			while ( (ok) and not(quit) ) do begin
+			while (ok) do begin
 				moverPieza(key,P,Grilla);
 				ok:=puedeBajar(P,Grilla,bordeMovimiento);
 			end;
