@@ -516,55 +516,6 @@ function permitirMovimiento(key:char;P:figuras.pieza; Grilla:tablero.grilla; bor
 		permitirMovimiento:=ok;
 	end;
 	
-	
-procedure caidaRepentina(key:char;var P:figuras.pieza;var Grilla:tablero.Grilla; bordeMovimiento:limitesPieza;var quit:boolean);
-//registra la caida progresiva y permite la interaccion de otros movimientos en el transcurso. Una vez que toca piso,
-//permite un ultimo movimiento
-var ok:boolean;
-	begin
-		ok:=puedeBajar(P,Grilla,bordeMovimiento);
-		
-		while (ok) and not (quit) do begin
-			delay(75);
-			if keypressed then begin		//se puede mover mientras cae
-				key:=readkey;
-				key:=lowerCase(key);
-				
-				if (key=#0) then begin	//si se activa una flecha, primero manda #0
-					key:=readkey;
-					case key of
-						#72: key:='w';	//flecha arriba
-						#75: key:='a';	//flecha izquierda
-						#77: key:='d';	//flecha derecha
-						#80: key:='s';	//flecha abajo
-					end;
-				end;
-				
-				if (key='q') then begin
-					quit:=true;
-					exit;
-				end;
-				if (key=#27) then			//pausa en caida
-					interfaz.pausa()
-				else
-				if (permitirMovimiento(key,p,grilla,bordeMovimiento)) then//comprueba si la accion puede realizarse dependiendo de la tecla presionada
-					moverPieza(key,P,Grilla);
-			end
-			else begin					//si no se presiona nada, sigue cayendo
-				key:='s';
-				moverPieza(key,P,Grilla);
-			end;
-			ok:=puedeBajar(P,Grilla,bordeMovimiento);
-		end;
-		
-		delay(300);	//ultima chance para mover la pieza antes de confirmar posicion
-		if (keypressed) then begin
-			key:=readkey;
-			key:=lowerCase(key);
-			if (permitirMovimiento(key,p,grilla,bordeMovimiento)) then
-				moverPieza(key,P,Grilla);
-		end;
-	end;
 
 procedure finalizarCaida(var P:figuras.pieza;
 						 var SP:figuras.pieza;
@@ -634,14 +585,6 @@ procedure registrarAccion 	(var key:char;
 				moverPieza(key,P, Grilla)
 			else
 				finalizarCaida(P,SP,Grilla,nivel,score,highScore,lineasTotales,blocks,gameOver);
-			{while (ok) and not(quit) do begin
-				caidaRepentina(key, P, Grilla, bordeMovimiento,quit);	//la pieza cae hasta tocar piso
-				
-				if (puedeBajar(P,Grilla,bordeMovimiento)) then			//si despues de moverse sigue en el aire, continua cayendo
-					caidaRepentina(key, P, Grilla, bordeMovimiento,quit);	//
-				ok:=puedeBajar(P,Grilla,bordeMovimiento);				//el bucle permite multiples caidas
-			end;
-			finalizarCaida(P,SP,Grilla,nivel,score,highScore,lineasTotales,blocks,gameOver);}
 		end
 		
 		//////// rotar //////////////

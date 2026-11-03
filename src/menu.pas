@@ -86,8 +86,14 @@ var key:char;
 					end;
 				end;
 				
-				if ( (key='a') or (key='d') or (key='s') or (key='w') or (key='q') or (key=#32) or (key=#27{esc}) ) then
+				if ( (key='a') or (key='d') or (key='s') or (key='w') or (key='q') or (key=#32{space}) or (key=#27{esc}) ) then
 					movimiento.registrarAccion(key,P,SP,grilla,nivel,score,highScore,lineasTotales,blocks,gameOver,quit);
+					
+				if (key='s') then begin		//el tiempo se 'reinicia' al igualarlo con la variable que se la compara
+											//esto evita una caida de "doble fila", iniciada por la accion+tiempo
+					tiempo:=getTickCount64;
+					tiempoActual:=GetTickCount64;
+				end;	
 			end;
 			
 			intervalo:=1100 - nivel*100;    //al principio queda en 1000ms
