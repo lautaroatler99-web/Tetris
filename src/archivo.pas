@@ -1,6 +1,7 @@
 unit archivo;
 
 interface
+uses sysUtils;
 type
 	recordPlayer=record
 		name:string[7];
@@ -19,15 +20,17 @@ implementation
 procedure abrirArchivo(var filePlayer:arch);
 //abre el archivo de puntuaciones (no lo cierra. Eso lo maneja el procedimiento que lo invoca)
 	begin
-		assign(filePlayer,'records.dat');
+		assign(filePlayer,'records/records.dat');
 		
 		{$I-}		//se deshabilitan las interrupciones para que no falle el programa al momento de abrirlo
 		reset(filePlayer);  //abro el archivo
 		{$I+}
 		//IOresult guarda el numero del error. si es 0 significa que salio todo bien
 		
-		if (IOresult<>0) then	//si entra significa que el archivo no existe
+		if (IOresult<>0) then begin	//si entra significa que el archivo no existe
+			forceDirectories('records');
 			rewrite(filePlayer);
+			end;
 		
 	end;
 

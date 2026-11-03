@@ -385,7 +385,7 @@ var filePlayer:archivo.arch; player:archivo.recordPlayer;
 
 		close(filePlayer);
 		readkey;
-		interfaz.iniciarFondo();
+		interfaz.borrarPantalla();
 	end;
 
 ////////////////////////////////////////////////////////////// 
@@ -426,7 +426,7 @@ var opcion:integer;key:char;
 						//jugar
 						jugar();
 						//al salir de jugar se vuelve al menu
-						iniciarFondo();
+						borrarPantalla();
 						interfazMenu(P,distancia);
 					end;
 					2:begin

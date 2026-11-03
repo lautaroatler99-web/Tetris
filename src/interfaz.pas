@@ -16,7 +16,7 @@ procedure actualizarNivel (lineasTotales:integer;var nivel:integer);
 procedure actualizarLineas(lineasTotales:integer);
 procedure panelPiezaSiguiente(SP:figuras.pieza);
 procedure actualizarContBloques (var blocks:integer);
-procedure iniciarFondo();
+procedure borrarPantalla();
 procedure actualizarHighScore(highScore:longint);
 function ingresarNombre():string;
 procedure finalizarPartida(Grilla:tablero.grilla);
@@ -698,7 +698,7 @@ procedure generarTituloTETRIS ();
 	end;
 	
 
-procedure iniciarFondo();
+procedure borrarPantalla();
 //pinta toda la pantalla del color de fondo
 	begin
 		SetFillStyle(SolidFill, fondo);
@@ -748,7 +748,7 @@ function ingresarNombre():string;
 var X,Y,cant:integer;ok:boolean;c:char;
 	name:string;
 	begin
-		iniciarFondo();			//tapamos todo
+		borrarPantalla();			//tapamos todo
 		X:=(getMaxX div 2);
 		Y:=(getMaxY div 2);
 		outTextXY(X - (textWidth('Enter name') div 2),Y-200,'Enter name');
@@ -841,7 +841,7 @@ var x0,y0:integer;	//posiciones del inicio
 		y0:=pixelY(1);	//
 		
 		/////////////	INTERFAZ	/////////////
-		iniciarFondo();
+		borrarPantalla();
 		crearMarco(G,x0,y0);			//crea el borde de cuadros
 		generarTituloTETRIS();
 		generarInterfazPuntuacion();	//puntacion
