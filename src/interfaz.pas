@@ -695,10 +695,13 @@ var X,Y:integer;
 
 procedure generarTituloTETRIS ();
 //crea el titulo 'Tetris' arriba del juego
+var medio:integer;text:string;
 	begin
 		setColor(cyan);
 		settextstyle(0,0,3); //tamaño de letra
-		outTextXY(pixelX(5),pixelY(-1),'Tetris');
+		text:='Pascal Tetris';
+		medio:=getMaxX div 2 - textWidth(text) div 2;
+		outTextXY(medio,pixelY(-1),text);
 	end;
 	
 

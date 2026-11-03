@@ -182,11 +182,14 @@ var X,Y,distancia:integer;
 
 procedure marco (X1,X2,Y1,Y2:integer);
 //crea el cuadro donde estaran las opciones
+var medio:integer;text:string;
 	begin
 		setFillStyle(solidFill, fondoMenu);
 		bar(X1,Y1,X2,Y2+50);
 		setColor(cyan);
-		outTextXY (X1 + (X2-X1) div 2 - textwidth('Tetris') div 2, Y1-50 ,'Tetris');
+		text:='Pascal Tetris';
+		medio:= (X2-X1) div 2 - textwidth(text) div 2;
+		outTextXY (X1 + medio, Y1-50 ,text);
 	end;
 
 	
