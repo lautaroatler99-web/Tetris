@@ -218,7 +218,6 @@ x,y:integer;
 		for i:=1 to 3 do
 			if (G.panel[i+1, 7] ) then begin	//si cualquier de estas 3 posiciones esta ocupada, la pieza no puede crearse
 				gameOver:=true;
-				exit;//sale de la funcion
 			end;
 		
 		for i:=1 to max do
