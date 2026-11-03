@@ -52,4 +52,9 @@ Características adicionales:
 Screenshots:
 
 ![inicio del juego](assets/image_1.png)
+[progreso de juego](assets/image_2.png)
+[pausa](assets/image_3.png)
+[game over](assets/image_4.png)
+[puntuación](assets/image_5.png)
+[ingresar nombre](assets/image_6.png)
 	
