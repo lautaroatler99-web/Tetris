@@ -124,7 +124,8 @@ procedure iniciarGraficos();
 //configura y da inicio a los graficos
 	var gd,gm:integer;	//puestos para la inferfaz grafica
 	begin
-		gd:=detect;
+		gd:=D8bit;
+		gm:=m1024x768;
 		Initgraph(gd,gm,''); //iniciamos interfaz
 	end;
 
@@ -186,6 +187,10 @@ var medio:integer;text:string;
 	begin
 		setFillStyle(solidFill, fondoMenu);
 		bar(X1,Y1,X2,Y2+50);
+		setColor(8);
+		SetLineStyle(SolidLn, 0, NormWidth);	//pongo el grosor de la linea a la normalidad
+		rectangle(X1-1,Y1-1,X2+1,Y2+50+1);
+		SetLineStyle(SolidLn, 0, NormWidth);	//pongo el grosor de la linea a la normalidad
 		setColor(cyan);
 		text:='Pascal Tetris';
 		medio:= (X2-X1) div 2 - textwidth(text) div 2;
@@ -266,6 +271,7 @@ procedure interfazMenu(var P:puntos;distancia:integer);
 //crea los botones del menu y declara el vector de posicione del triangulo de asignacion
 var X1,X2,Y1,Y2:integer;
 	begin
+		interfaz.borrarPantalla();
 		mostrarFirma();
 		verison ();
 		mostrarControles();
@@ -305,18 +311,12 @@ var X1,X2,Y1,Y2:integer;
 	end;
 
 
-procedure borrarInterfazMenu();
-	begin
-		setFillStyle(SolidFill,fondo);
-		bar(pixelX(3),pixelY(4),pixelX(12),pixelY(19));
-	end;
-
 /////////////////////////////// PUNTUACION /////////////////////////////// 
 
 procedure posicionPuntuacion (var X:integer;var Y:integer);
 //calcula la posicion donde estaran las puntuaciones
 	begin
-		X:=pixelX(-8);
+		X:=pixelX(-7);
 		Y:=pixelY(7);
 	end;
 	
@@ -375,8 +375,12 @@ procedure mostrarPuntuacion();
 var filePlayer:archivo.arch; player:archivo.recordPlayer;
 	i,X,Y:integer;
 	begin
+		interfaz.borrarPantalla();
+		
+		mostrarFirma();
+		verison ();
+		settextstyle(0,0,3); //tamaño de letra
 		setColor(lightgreen);
-		borrarInterfazMenu();
 		
 		posicionPuntuacion(X,Y);
 		
@@ -435,14 +439,11 @@ var opcion:integer;key:char;
 						//jugar
 						jugar();
 						//al salir de jugar se vuelve al menu
-						borrarPantalla();
 						interfazMenu(P,distancia);
 					end;
 					2:begin
 						//score
-						borrarPantalla();
 						mostrarPuntuacion();
-						borrarPantalla();
 						interfazMenu(P,distancia);
 						opcion:=1;
 					end;
