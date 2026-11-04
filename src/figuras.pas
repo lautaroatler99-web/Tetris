@@ -205,6 +205,15 @@ var i,j,tam,x,y:integer;
 	end;
 
 
+procedure elegirPieza(var P:pieza);
+	//elije una figura y color aleatorio
+	begin
+		inicializarPieza(P); //pone todos los campos en false
+		elegirFigura(P);
+		elegirColor(P);
+	end;
+
+
 procedure crearPiezaInicial(var P:pieza; var G:tablero.grilla;var gameOver:boolean);
 //crea la pieza en su primera aparicion, posicionandola en el centro superior de la grilla (2,5)
 var i,j,tam,fila,columna:integer;
@@ -246,12 +255,4 @@ x,y:integer;
 				end;
 	end;
 
-procedure elegirPieza(var P:pieza);
-	//elije una figura y color aleatorio
-	begin
-		inicializarPieza(P); //pone todos los campos en false
-		elegirFigura(P);
-		elegirColor(P);
-	end;
-	
 end.

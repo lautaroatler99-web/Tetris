@@ -465,7 +465,7 @@ var Xscore,Xrectangle,
 procedure posicionHighScore(var X:integer; var Y:integer);
 //posicion de la parte de high score
 	begin
-		X:=pixelX(14);
+		X:=pixelX(15);
 		Y:=pixelY(8)+10;
 	end;
 
@@ -550,7 +550,7 @@ procedure generarInterfazHighScore ();
 procedure posicionLineas(var X:integer; var Y:integer);
 //devuelve las posiciones XY del contador de lineas
 	begin
-		X:=pixelX(14);
+		X:=pixelX(15);
 		Y:=pixelY(4);
 	end;
 	
@@ -644,7 +644,7 @@ var X,Y:integer;
 procedure posicionBloques (var X:integer; var Y:integer);
 //posicion fija para la interfaz del contador de bloques
 	begin
-		X:=pixelX(14);
+		X:=pixelX(15);
 		Y:=pixelY(5)+10;
 	end;
 
@@ -700,8 +700,11 @@ var medio:integer;text:string;
 		setColor(cyan);
 		settextstyle(0,0,3); //tamaño de letra
 		text:='Pascal Tetris';
-		medio:=getMaxX div 2 - textWidth(text) div 2;
-		outTextXY(medio,pixelY(-1),text);
+		medio:=( pixelX(12)-pixelX(0) ) div 2 - {esto me da el centro del marco}
+				(textWidth(text) div 2)+		{le resto la mitad del texto}
+				pixelX(1);						{por ultimo le sumo el origen}
+		//getMaxX div 2 - textWidth(text) div 2;
+		outTextXY(medio,pixelY(-1)+15,text);
 	end;
 	
 
