@@ -407,7 +407,7 @@ var opcion:integer;key:char;
 		while (ok) do begin
 			key:=readkey;
 			key:=lowercase(key);
-			if (key =#0) then begin 	//se apreto una tecla especial (posible flechas)
+			if (key =#0) then begin 	//si apreto una tecla especial (posible flechas)
 				key:=readkey;
 				case key of
 					#72:key:='w';		//#72 es flecha arriba
@@ -440,7 +440,9 @@ var opcion:integer;key:char;
 					end;
 					2:begin
 						//score
+						borrarPantalla();
 						mostrarPuntuacion();
+						borrarPantalla();
 						interfazMenu(P,distancia);
 						opcion:=1;
 					end;
