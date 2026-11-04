@@ -34,8 +34,9 @@ procedure abrirArchivo(var filePlayer:arch);
 		
 	end;
 
+
 procedure guardarResultados (player:recordPlayer; var filePlayer:arch);
-//guarda en el archivo los resultados del jugador ordenado por puntuacion
+//guarda en el archivo los primeros 10 resultados del jugador ordenado por puntuacion
 var P:recordPlayer;encontre:boolean;
 	begin
 		encontre:=false;
@@ -47,20 +48,24 @@ var P:recordPlayer;encontre:boolean;
 		end;
 		if (encontre) then begin
 			seek(filePlayer, filePos(filePlayer) -1);
-			while (not EOF (filePlayer) ) do begin 				//recorro todo el archivo hasta el final
+			while (filePos(filePlayer)<filesize(filePlayer)) and (filePos(filePlayer)<10) do begin
+			 	//mientras la posicion del puntero sea menor al tamaño del archivo, y no sean 10 posiciones
+			 	
 				read(filePlayer,P);								//leo el jugador de esa posicion
 				seek(filePlayer, filePos(filePlayer) -1);		//me posiciono en la pos recien leida
 				write(filePlayer,player);						//sobreescribo el valor
 				player:=P;										//ahora player tiene el jugador anterior
 			end;
-			write(filePlayer,player);
+			if (fileSize(filePlayer)<10) then	//si el tamaño es menor a 10, lo almaceno
+				write(filePlayer,player);
 		end
 		else begin	//no hay jugador con puntuacion mas alta, se guarda en el ultimo puesto
-			seek(filePlayer,filesize(filePlayer)); 	//me desplazo a la ultima posicion del archivo
-			write(filePlayer,player); 				//escribo al jugador en la ultima posicion
+			if (fileSize(filePlayer)<10) then begin 
+				seek(filePlayer,filesize(filePlayer)); 	//me desplazo a la ultima posicion del archivo
+				write(filePlayer,player); 				//escribo al jugador en la ultima posicion
+			end;
 		end;
 		close(filePlayer);
 	end;
-	
 	
 end.
