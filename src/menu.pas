@@ -5,7 +5,7 @@ interface
 uses graph,wincrt,tablero,figuras,interfaz,movimiento,SysUtils,archivo;
 
 const fondoMenu=10;	//color de fondo  del menu
-	fondo=0;	//color de fondo del juego
+
 type
 puntos=array [1..6] of integer; //array de coordenadas para rellenar el triangulo
 
