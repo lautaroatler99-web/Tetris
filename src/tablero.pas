@@ -9,7 +9,8 @@ uses graph;
 const 
 	tam=30;	//tamaño de los bloques de la grilla
 	fondo=0; //color del fondo del juego
-	
+	anchoTablero=12;
+	altoTablero=22;
 	
 type
   arrayGrilla = array[1..22, 1..12] of Boolean;
@@ -60,8 +61,8 @@ function pixelX(X:integer):integer;
 		//transforma las coordenadas X en la ubicacion exacto del pixel a partir del borde
 var inicioBordeX:integer;
 	begin
-		inicioBordeX:=6;		// como el ancho es de 12, al restarle 6 me quedo con el borde del eje X
-		pixelX:=grillaX()*tam - (inicioBordeX*tam) + X*tam;	//con grillaX() me ubico en el centro, al restarle el 6*30, me quedo exactamente en el borde del eje X
+		inicioBordeX:=anchoTablero div 2 +2;				// como el ancho es de 12, al restarle 6 me quedo con el borde del eje X. Sumo 2 para correr toda la interfaz grafica para que entren todos los objetos.
+		pixelX:=grillaX()*tam - (inicioBordeX*tam) + X*tam;	//con (grillaX()*tam) me ubico en el centro, al restarle el 6*30 (inicioBordeX*tam), me quedo exactamente en el borde del eje X
 	end;													//y con (X*tam) me desplazo la cantidad de pixeles a la ubicacion de la coordenada (X=coordenada entre 1..12)
 
 
@@ -69,8 +70,8 @@ function pixelY(Y:integer):integer;
 	//transforma las coordenadas Y en la ubicacion exacto del pixel en relacion a la grilal jugable.
 var inicioBordeY:integer;
 	begin
-		inicioBordeY:=11;	//el largo es de 22, entonces la mitad me deja en el centro
-		pixelY:=grillaY()*tam - (inicioBordeY*tam) + Y*tam;	//con grillaY() me ubico en el centro, al restarle 11*30, me quedo exactamente en el borde del eje Y
+		inicioBordeY:=altoTablero div 2 -1;	//el largo es de 22, entonces la mitad me deja en el centro. Resto 1 para que coincida con el origen
+		pixelY:=grillaY()*tam - (inicioBordeY*tam) + Y*tam;	//con grillaY() me ubico en el centro, al restarle el 11*30 (inicioBordeY*tam), me quedo exactamente en el borde del eje Y
 	end;													//y al sumar (Y*tam) me desplazo la cantidad de pixeles a la ubicacion de la coordenada (Y=coordenada entre 1..22)
 
 end.
