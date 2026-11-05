@@ -94,24 +94,6 @@ var fila,columna,x,y:integer;
 	end;
 
 
-procedure crearBloque(grilla:tablero.grilla;i,j:integer);
-//crea un cuadrado de color aleatorio para pintar la grilla en el gameOver
-var tam,color,lightColor,X,Y:integer;
-	begin
-		tam:=30;
-		color:=random(6)+1;
-		lightColor:=color+8;
-			
-		setFillStyle(SolidFill,color);	//color del bloque
-		setColor(lightColor);			//color de borde
-			
-		X:=grilla.pos[i,j].X;
-		Y:=grilla.pos[i,j].Y;
-		bar(x+1,y+1,x+tam-1,y+tam-1);		//imprimo bloque
-		rectangle(x+1,y+1,x+tam-1,y+tam-1); //imprimo borde
-	end;
-
-
 procedure mensajeGameOver();
 //imprime un mensaje luego de perder
 var X1,Y1,X2,Y2:integer;
@@ -138,24 +120,52 @@ var X1,Y1,X2,Y2:integer;
 		outTextXY(X1+15,Y1+70,'Press any key');
 		readkey;
 	end;
+
+
+procedure crearBloque(grilla:tablero.grilla;i,j:integer;reverse:boolean);
+//crea un cuadrado de color aleatorio para pintar la grilla en el gameOver
+var tam,color,lightColor,X,Y:integer;
+	begin
+		delay(10);
+		tam:=30;
+		if (not reverse) then begin	//primera espiral con colores aleatorios
+			color:=random(6)+1;
+			lightColor:=color+8;
+		end
+		//cuando la espiral es invertida, se pinta del fondo para hacerla desaparecer
+		else begin
+			color:=fondo;
+			lightcolor:=fondo;
+		end;
+		setFillStyle(SolidFill,color);	//color del bloque
+		setColor(lightColor);			//color de borde
+			
+		X:=grilla.pos[i,j].X;
+		Y:=grilla.pos[i,j].Y;
+		bar(x+1,y+1,x+tam-1,y+tam-1);		//imprimo bloque
+		rectangle(x+1,y+1,x+tam-1,y+tam-1); //imprimo borde
+	end;
+
 	
 procedure finalizarPartida(Grilla:tablero.grilla);
-	//recorre la grilla en espiral pintando todo a su paso
+	//recorre la grilla en espiral pintando todo a su paso con colores aleatorios
+	//y luego una espiral invertida del color del fondo.
+	//los 'exit' son para que se pueda saltear en cualquier momento y volver al menu.
 var i,j:integer;
 	filaMin,filaMax,colMin,colMax:integer;
-	
+	reverse:boolean;
 	begin
 		filaMin:=2;		//
 		colMin:=2;		//rangos de la grilla jugable
 		filaMax:=21;	//
 		colMax:=11;		//
 		
+		reverse:=false;
 		while (filaMin<=filaMax) and (colMin <=colMax) do begin
 		
 			//IZQUIERDA A DERECHA
 			for j:=colMin to colMax do begin
-				crearBloque(grilla,filaMin,j);
-				delay(10);
+				crearBloque(grilla,filaMin,j,reverse);
 				if (keypressed) then
 					exit;
 			end;
@@ -163,8 +173,7 @@ var i,j:integer;
 			
 			//ARRIBA A ABAJO
 			for i:=filaMin to filaMax do begin
-				crearBloque(grilla,i,colMax);
-				delay(10);
+				crearBloque(grilla,i,colMax,reverse);
 				if (keypressed) then
 					exit;
 			end;
@@ -172,26 +181,65 @@ var i,j:integer;
 			
 			//ABAJO A ARRIBA
 			for j:=colMax downto colMin do begin
-				crearBloque(grilla,filaMax,j);
-				delay(10);
+				crearBloque(grilla,filaMax,j,reverse);
 				if (keypressed) then
 					exit;
 			end;
 			filaMax:=filaMax-1;
 			
 			//DERECHA A IZQUIERDA
-			
 			for i:=filaMax downto filaMin do begin
-				crearBloque(grilla,i,colMin);
-				delay(10);
+				crearBloque(grilla,i,colMin,reverse);
 				if (keypressed) then
 					exit;
 			end;
 			colMin:=colMin+1;
 		end;
-		mensajeGameOver();
-	end;
+		delay(100);
+		
+		//////////// espiral invertida //////////// 
+		
+		reverse:=true;
+		colMin:=colMin-1;
+		
+		while (filaMax<21) and (colMax <11) do begin	
 
+			//ABAJO
+			for i:=filaMin to filaMax do begin
+				crearBloque(grilla,i,colMin,reverse);
+				if (keypressed) then
+					exit;
+			end;
+			filaMax:=filaMax+1;
+
+			//DERECHA
+			for j:=colMin to colMax do begin
+				crearBloque(grilla,filaMax,j,reverse);
+				if (keypressed) then
+					exit;
+			end;
+			colMax:=colMax+1;
+
+			//ARRIBA
+			for i:=filaMax downto filaMin do begin
+				crearBloque(grilla,i,colMax,reverse);
+				if (keypressed) then
+					exit;
+			end;
+			filaMin:=filaMin-1;
+
+			//IZQUIERDA
+			for j:=colMax downto colMin do begin
+				crearBloque(grilla,filaMin,j,reverse);
+				if (keypressed) then
+					exit;
+			end;
+			colMin:=colMin-1;
+			
+		end;
+		
+		mensajeGameOver();	//imprimo cartel de gameover
+	end;
 
 
 ////////////////////////////////////////////// NIVEL //////////////////////////////////////////////

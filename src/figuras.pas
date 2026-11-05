@@ -225,8 +225,8 @@ x,y:integer;
 		setcolor(P.colorBorde);
 		//////verifico que no este ocupada
 		for i:=1 to 3 do
-			if (G.panel[i+1, 7] ) then begin	//si cualquier de estas 3 posiciones esta ocupada, la pieza no puede crearse
-				gameOver:=true;
+			if (G.panel[i+1, 7] ) then begin	//si cualquier de estas 3 posiciones esta ocupada, la partida se termina.
+				gameOver:=true;					//La pieza se crea igual para mostrar la colision.
 			end;
 		
 		for i:=1 to max do
