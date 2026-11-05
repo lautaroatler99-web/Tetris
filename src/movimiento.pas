@@ -517,8 +517,8 @@ function permitirMovimiento(key:char;P:figuras.pieza; Grilla:tablero.grilla; bor
 	end;
 	
 
-procedure posicionFantasma (P:pieza; var Grilla:tablero.grilla);
-//calcula la posicion de la pieza fantasma y la dibuja. Solo se ejecuta para movimientos laterales (A,D) o rotacion (W)
+procedure tocarPiso (var P:figuras.pieza;var Grilla:tablero.grilla);
+//baja la pieza hasta tocar piso y manda esas coordenadas de retorno (P modificado)
 var ok:boolean;i,j:integer;piso:limitesPieza;
 	
 	begin
@@ -533,7 +533,26 @@ var ok:boolean;i,j:integer;piso:limitesPieza;
 						P.posBloque[i,j].Y:= P.posBloque[i,j].Y + 1;
 			ok:=puedeBajar(P,Grilla,piso)
 		end;
+	end;
+	
+procedure posicionFantasma (P:pieza; var Grilla:tablero.grilla);	//variable P solo se pasa por valor
+//calcula la posicion de la pieza fantasma y la dibuja. Solo se ejecuta para movimientos laterales (A,D) o rotacion (W)
+	begin
+		tocarPiso(P,Grilla);
 		interfaz.dibujarPiezaFantasma (P,grilla);	//una vez calculada, la dibujo
+	end;
+
+
+procedure colapsarPieza(var P:figuras.pieza;var Grilla:tablero.grilla);
+//deja caer la pieza hasta colisionar con el piso
+	begin
+		borrarPiezaColor(P, Grilla);		//borro los pixeles
+		borrarCeldas(P,Grilla);				//y su posicion logica
+
+		tocarPiso(P,Grilla);	//la empujo hasta colisionar
+
+		marcarCeldas(P,grilla);				//marco su posicion logica
+		figuras.dibujarPieza(P, grilla);	//dibujo los pixeles en la nueva posicion
 	end;
 
 
@@ -587,7 +606,6 @@ procedure registrarAccion 	(var key:char;
 
 //procedimiento que interpreta la accion realizada
 	var
-	ok:boolean;
 	i:integer;
 	bordeMovimiento:limitesPieza;
 	begin
@@ -608,16 +626,19 @@ procedure registrarAccion 	(var key:char;
 		//////// caida abrupta //////////////
 		
 		else if (key=#32) then begin		//SPACE
-			ok:=puedeBajar(P,Grilla,bordeMovimiento);
-			while (ok) do begin
-				moverPieza(key,P,Grilla);
-				ok:=puedeBajar(P,Grilla,bordeMovimiento);
+			if (puedeBajar(P,Grilla,bordeMovimiento)) then begin
+				colapsarPieza(P,Grilla);
+				delay(100);		//tiempo de espera para que no se cree la siguiente pieza instantaneamente
+				finalizarCaida(P,SP,Grilla,nivel,score,highScore,lineasTotales,blocks,gameOver);
+			end
+			else begin			//si no puede bajar mas, apretar SPACE finaliza la caida completamente
+				delay(100);		//tiempo de espera para que no se cree la siguiente pieza instantaneamente
+				finalizarCaida(P,SP,Grilla,nivel,score,highScore,lineasTotales,blocks,gameOver);
 			end;
-			finalizarCaida(P,SP,Grilla,nivel,score,highScore,lineasTotales,blocks,gameOver);
 		end
 		//////// caida //////////////
 		
-		else if (key='s') then begin 
+		else if (key='s') then begin
 			if (puedeBajar(P,Grilla,bordeMovimiento)) then
 				moverPieza(key,P, Grilla)
 			else
