@@ -1,4 +1,4 @@
-# Tetris en pascal
+# Tetris en Pascal
 
 ## Descripción:
 
@@ -43,7 +43,7 @@ Podés descargar la versión del juego desde la sección [Releases](https://gith
 - **A / flecha izquierda** : Mover pieza a la izquierda.
 - **D / flecha derecha** : Mover pieza a la derecha.
 - **W / flecha arriba** : Rotar pieza.
-- **S / flecha abajo** Acelearar caida.
+- **S / flecha abajo** Acelerar caída.
 - **Espacio**: Colapsar pieza.
 - **Q**: Terminar partida.
 - **Esc**: Pausa.
