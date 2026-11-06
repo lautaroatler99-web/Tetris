@@ -40,8 +40,7 @@ limitesPieza=array[1..4] of integer; //vector que retrata el lateral de la pieza
 
 
 procedure registrarAccion (	var key:char;
-							var P:figuras.pieza;
-							var SP:figuras.vectorPiezas;
+							var VP:figuras.vectorPiezas;
 							var Grilla:tablero.grilla;
 							var nivel:integer;
 							var score:longint;
@@ -556,8 +555,7 @@ procedure colapsarPieza(var P:figuras.pieza;var Grilla:tablero.grilla);
 	end;
 
 
-procedure finalizarCaida(var P:figuras.pieza;
-						 var SP:figuras.vectorPiezas;
+procedure finalizarCaida(var VP:vectorPiezas;
 						 var Grilla:tablero.grilla;
 						 var nivel:integer;
 						 var score:longint;
@@ -567,18 +565,18 @@ procedure finalizarCaida(var P:figuras.pieza;
 						 var gameOver:boolean);
 	//se encarga de todo el proceso una vez la pieza se haya asentado
 	begin
-		confirmarLinea(P,Grilla,nivel,score,lineasTotales);			//reviso si la caida de la pieza logro completar una linea
-		P:=SP[1];										//la pieza siguiente pasa a ser la actual
-		SP[1]:=SP[2];								//se desplazan las piezas del vector
-		figuras.elegirPieza(SP[2]);					//se elije la siguiente pieza
-		interfaz.panelPiezaSiguiente(SP);
-		figuras.crearPiezaInicial(P, Grilla,gameOver);			//la pieza llego al final y se crea una nueva
+		confirmarLinea(VP[1],Grilla,nivel,score,lineasTotales);			//reviso si la caida de la pieza logro completar una linea
+		VP[1]:=VP[2];										//la pieza siguiente pasa a ser la actual
+		VP[2]:=VP[3];									//se desplazan las piezas del vector
+		figuras.elegirPieza(VP[3]);						//se elije la siguiente pieza
+		interfaz.panelPiezaSiguiente(VP);
+		figuras.crearPiezaInicial(VP[1], Grilla,gameOver);			//la pieza llego al final y se crea una nueva
 		interfaz.actualizarContBloques(blocks);
 		if (score>highScore) then begin
 			highScore:=score;
 			interfaz.actualizarHighScore(score);
 		end;
-		posicionFantasma(P,Grilla);	//dibujo la posicion fantasma de la nueva pieza
+		posicionFantasma(VP[1],Grilla);	//dibujo la posicion fantasma de la nueva pieza
 	end;
 
 
@@ -594,8 +592,7 @@ var color:integer;
 
 
 procedure registrarAccion 	(var key:char;
-							var P:figuras.pieza;
-							var SP:figuras.vectorPiezas;
+							var VP:vectorPiezas;
 							var Grilla:tablero.grilla;
 							var nivel:integer;
 							var score:longint;
@@ -617,52 +614,52 @@ procedure registrarAccion 	(var key:char;
 		//////// izquierda/derecha //////////////
 		
 		if ( (key='a') or (key='d') ) then begin
-			if (permitirMovimiento(key,P,Grilla,bordeMovimiento)) then begin
-				borrarPiezaFantasma(P,Grilla,bordeMovimiento);	//borro la anterior pieza fantasma
-				moverPieza(key,P, Grilla);
-				posicionFantasma(P,Grilla);		//creo la nueva pieza fantasma
+			if (permitirMovimiento(key,VP[1],Grilla,bordeMovimiento)) then begin
+				borrarPiezaFantasma(VP[1],Grilla,bordeMovimiento);	//borro la anterior pieza fantasma
+				moverPieza(key,VP[1], Grilla);
+				posicionFantasma(VP[1],Grilla);		//creo la nueva pieza fantasma
 			end;
 		end
 		
 		//////// caida abrupta //////////////
 		
 		else if (key=#32) then begin		//SPACE
-			if (puedeBajar(P,Grilla,bordeMovimiento)) then begin
-				colapsarPieza(P,Grilla);
+			if (puedeBajar(VP[1],Grilla,bordeMovimiento)) then begin
+				colapsarPieza(VP[1],Grilla);
 				delay(100);		//tiempo de espera para que no se cree la siguiente pieza instantaneamente
-				finalizarCaida(P,SP,Grilla,nivel,score,highScore,lineasTotales,blocks,gameOver);
+				finalizarCaida(VP,Grilla,nivel,score,highScore,lineasTotales,blocks,gameOver);
 			end
 			else begin			//si no puede bajar mas, apretar SPACE finaliza la caida completamente
 				delay(100);		//tiempo de espera para que no se cree la siguiente pieza instantaneamente
-				finalizarCaida(P,SP,Grilla,nivel,score,highScore,lineasTotales,blocks,gameOver);
+				finalizarCaida(VP,Grilla,nivel,score,highScore,lineasTotales,blocks,gameOver);
 			end;
 		end
 		//////// caida //////////////
 		
 		else if (key='s') then begin
-			if (puedeBajar(P,Grilla,bordeMovimiento)) then
-				moverPieza(key,P, Grilla)
+			if (puedeBajar(VP[1],Grilla,bordeMovimiento)) then
+				moverPieza(key,VP[1], Grilla)
 			else
-				finalizarCaida(P,SP,Grilla,nivel,score,highScore,lineasTotales,blocks,gameOver);
+				finalizarCaida(VP,Grilla,nivel,score,highScore,lineasTotales,blocks,gameOver);
 		end
 		
 		//////// rotar //////////////
 		
 		else if (key='w') then begin
-			if (p.rotacion) then begin
-				borrarPiezaFantasma(P,Grilla,bordeMovimiento);		//borro la anterior pieza fantasma
-				moverPieza(key,P, Grilla);
-				posicionFantasma(P,Grilla);		//creo la nueva pieza fantasma ya rotada
+			if (VP[1].rotacion) then begin
+				borrarPiezaFantasma(VP[1],Grilla,bordeMovimiento);		//borro la anterior pieza fantasma
+				moverPieza(key,VP[1], Grilla);
+				posicionFantasma(VP[1],Grilla);		//creo la nueva pieza fantasma ya rotada
 			end;
 		end
 		
 		//////// tiempo //////////////
 		
 		else if (key='t') then begin			//baja una posicion por cada segundo relativo al nivel
-			if (puedeBajar(P,Grilla,bordeMovimiento)) then
-				moverPieza(key,P,Grilla)
+			if (puedeBajar(VP[1],Grilla,bordeMovimiento)) then
+				moverPieza(key,VP[1],Grilla)
 			else
-				finalizarCaida(P,SP,Grilla,nivel,score,highScore,lineasTotales,blocks,gameOver);
+				finalizarCaida(VP,Grilla,nivel,score,highScore,lineasTotales,blocks,gameOver);
 		end
 		
 		//////// salir //////////////

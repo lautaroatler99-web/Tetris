@@ -24,7 +24,7 @@ type
 		tipo:string;
 	end;
 
-vectorPiezas=array [1..2] of pieza;	//vector para las piezas siguientes
+vectorPiezas=array [1..3] of pieza;	//[1] jugable. [2] y [3] sigueintes
 
 
 procedure crearPiezaInicial(var P:pieza; var G:tablero.grilla;var gameOver:boolean);

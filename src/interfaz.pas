@@ -14,7 +14,7 @@ procedure pausa ();
 procedure sumarPuntos (lineasCompletadas,nivel:integer;var score:longint);
 procedure actualizarNivel (lineasTotales:integer;var nivel:integer);
 procedure actualizarLineas(lineasTotales:integer);
-procedure panelPiezaSiguiente(SP:vectorPiezas);
+procedure panelPiezaSiguiente(VP:vectorPiezas);
 procedure actualizarContBloques (var blocks:integer);
 procedure borrarPantalla();
 procedure actualizarHighScore(highScore:longint);
@@ -375,7 +375,7 @@ var X,Y,I:integer;
 	end;
 
 	
-procedure panelPiezaSiguiente(SP:vectorPiezas);
+procedure panelPiezaSiguiente(VP:vectorPiezas);
 	//procedimiento base para limpiar pantalla y redibujar la pieza siguiente
 	var	color:integer;
 		colorRelleno:FillSettingsType;
@@ -389,7 +389,7 @@ procedure panelPiezaSiguiente(SP:vectorPiezas);
 		posicionSigPieza(X,Y);	//consigo el pixel para dibujar las piezas
 		
 		for i:=1 to 2 do begin
-			dibujarSigPieza(SP[i],X,Y);
+			dibujarSigPieza(VP[i+1],X,Y);	//i+1 ya que la primera pieza es la jugable, mientras que la pieza 2 y 3 son las siguientes
 			Y:=Y+140;
 		end;
 		setColor(color); 	//restauro el color	(POP)

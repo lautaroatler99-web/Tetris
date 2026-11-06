@@ -38,8 +38,7 @@ function conseguirHighScore ():longint;
 procedure jugar ();
 //inicia el juego Tetris.
 var key:char;
-	P:figuras.pieza;	//pieza
-	SP:vectorPiezas; 	//vector de sig pieza
+	VP:vectorPiezas; 	//vector de las piezas
 	Grilla:tablero.grilla;	//mapa del juego
 	tiempo, tiempoActual: Qword;	//numeros sin signo
 	nivel,lineasTotales,i:integer;
@@ -65,15 +64,14 @@ var key:char;
 		
 		//iniciamos la inerfaz de juego	
 		interfaz.iniciarJuego(Grilla);
-		figuras.elegirPieza(P);			//se elije la primera pieza
 		
-		for i:=1 to 2 do
-			figuras.elegirPieza(SP[i]);		//se elijen las siguientes piezas
+		for i:=1 to 3 do
+			figuras.elegirPieza(VP[i]);		//se elijen todas las piezas
 			
-		figuras.crearPiezaInicial(P,Grilla,gameOver);	//se crea la primera pieza en la pos central superior
-		panelPiezaSiguiente(SP);		//creo la pieza siguiente en la interfaz
+		figuras.crearPiezaInicial(VP[1],Grilla,gameOver);	//se crea la primera pieza en la pos central superior
+		panelPiezaSiguiente(VP);		//creo la pieza siguiente en la interfaz
 		tiempo:=getTickCount64;
-		movimiento.posicionFantasma(P,Grilla);	//dibujo la posicion fantasma de la nueva pieza
+		movimiento.posicionFantasma(VP[1],Grilla);	//dibujo la posicion fantasma de pieza jugable
 		while ( (not gameOver) and (not quit) ) do begin
 			tiempoActual:=GetTickCount64;
 			
@@ -91,7 +89,7 @@ var key:char;
 				end;
 				
 				if ( (key='a') or (key='d') or (key='s') or (key='w') or (key='q') or (key=#32{space}) or (key=#27{esc}) ) then
-					movimiento.registrarAccion(key,P,SP,grilla,nivel,score,highScore,lineasTotales,blocks,gameOver,quit);
+					movimiento.registrarAccion(key,VP,grilla,nivel,score,highScore,lineasTotales,blocks,gameOver,quit);
 					
 				if (key='s') then begin		//el tiempo se 'reinicia' al igualarlo con la variable que se la compara
 											//esto evita una caida de "doble fila", iniciada por la accion+tiempo
@@ -107,7 +105,7 @@ var key:char;
 						
 			if ((tiempoActual - tiempo) >= intervalo) then begin
 				key:='t';				//se envia t para que caiga por segundo
-				movimiento.registrarAccion(key, P, SP, Grilla,nivel,score,highScore,lineasTotales,blocks,gameOver,quit);
+				movimiento.registrarAccion(key, VP, Grilla,nivel,score,highScore,lineasTotales,blocks,gameOver,quit);
 				tiempo:=tiempoActual;
 			end;
 		end;
