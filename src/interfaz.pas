@@ -14,7 +14,7 @@ procedure pausa ();
 procedure sumarPuntos (lineasCompletadas,nivel:integer;var score:longint);
 procedure actualizarNivel (lineasTotales:integer;var nivel:integer);
 procedure actualizarLineas(lineasTotales:integer);
-procedure panelPiezaSiguiente(SP:figuras.pieza);
+procedure panelPiezaSiguiente(SP:vectorPiezas);
 procedure actualizarContBloques (var blocks:integer);
 procedure borrarPantalla();
 procedure actualizarHighScore(highScore:longint);
@@ -323,17 +323,14 @@ procedure calibrarPiezas (tipo:string;var PosX:integer; var PosY:integer);
 	end;
 	
 	
-procedure dibujarSigPieza (SP:figuras.pieza);
+procedure dibujarSigPieza (SP:figuras.pieza;posX,posY:integer);
 //dibuja la siguiente pieza en la pantalla
 var i,j,tam:integer;
 	X,Y:integer;
-	posX,posY:integer;
 	begin
 		tam:=30;//tamaño de cada cuadro
 		SetFillStyle(SolidFill,SP.colorRelleno);
 		setcolor(SP.colorBorde);
-		
-		posicionSigPieza(posX,posY);	//consigo el pixel para dibujar las piezas
 		
 		//si es figura en I, lo dibujo acostado para centrarlo
 		if (SP.tipo='figI') then begin
@@ -366,27 +363,35 @@ var i,j,tam:integer;
 
 
 procedure borrarSigPieza();
-//crea un bloque negro borrando los pixeles de la sig pieza
-var X,Y:integer;
+//crea un bloque negro borrando los pixeles de las 3 siguientes piezas
+var X,Y,I:integer;
 	begin
 		posicionSigPieza(X,Y);
-		setFillStyle(solidFill, fondo);
-		bar(X+15,Y,X+(30*4)+20,Y+30*3);
+		for i:=1 to 2 do begin
+			setFillStyle(solidFill, fondo);
+			bar(X+15,Y,X+(30*4)+20,Y+30*3);
+			Y:=Y+140;
+		end;
 	end;
 
 	
-procedure panelPiezaSiguiente(SP:figuras.pieza);
+procedure panelPiezaSiguiente(SP:vectorPiezas);
 	//procedimiento base para limpiar pantalla y redibujar la pieza siguiente
 	var	color:integer;
 		colorRelleno:FillSettingsType;
-
+		i:integer;X,Y:integer;
 	begin
 		color:=getColor;				//guardo el color actual (PUSH)
 		getFillSettings(colorRelleno); 	//guardo la configuracion de fillstyle actual (PUSH)
 		
 		borrarSigPieza();
-		dibujarSigPieza(SP);
 		
+		posicionSigPieza(X,Y);	//consigo el pixel para dibujar las piezas
+		
+		for i:=1 to 2 do begin
+			dibujarSigPieza(SP[i],X,Y);
+			Y:=Y+140;
+		end;
 		setColor(color); 	//restauro el color	(POP)
 		SetFillStyle(colorRelleno.Pattern, colorRelleno.Color);// restauro la configuracion de fillStyle (POP)
 	end;
@@ -394,6 +399,7 @@ procedure panelPiezaSiguiente(SP:figuras.pieza);
 
 procedure generarInterfazSigPieza();
 //inicia la parte visual de la siguiente pieza por primerae vez
+var X1,X2,Y1,Y2,i,altura:integer;
 	begin
 		settextstyle(0,0,3); //tamaño de letra
 			
@@ -401,12 +407,18 @@ procedure generarInterfazSigPieza();
 		
 		SetLineStyle(SolidLn, 0, ThickWidth);	//la linea es mas gruesa
 		
-		rectangle(
-		tablero.pixelX(-6)+15,		//dibujo el marco
-		tablero.pixelY(8),
-		tablero.PixelX(0),
-		tablero.pixelY(13)+15);
-
+		X1:=tablero.pixelX(-6)+15;		//
+		Y1:=tablero.pixelY(8);			//	posiciones del marco
+		X2:=tablero.PixelX(0);			//
+		Y2:=tablero.pixelY(13)+15;		//
+		
+		altura:=Y2-Y1-30;
+		for i:=1 to 2 do begin
+			rectangle(X1,Y1,X2,Y2);		//dibujo los 3 marcos
+			Y2:=Y2+altura;
+			Y1:=Y2-altura;
+		end;
+		
 		setcolor(5);		//color de 'Next'
 		
 		outTextXY( (tablero.pixelX(-4)-10),(tablero.pixelY(8)+15),'Next');	//sig pieza

@@ -24,6 +24,9 @@ type
 		tipo:string;
 	end;
 
+vectorPiezas=array [1..2] of pieza;	//vector para las piezas siguientes
+
+
 procedure crearPiezaInicial(var P:pieza; var G:tablero.grilla;var gameOver:boolean);
 procedure dibujarPieza(P:pieza;G:tablero.grilla);
 procedure elegirPieza(var P:pieza);

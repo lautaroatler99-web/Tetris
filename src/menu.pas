@@ -38,10 +38,11 @@ function conseguirHighScore ():longint;
 procedure jugar ();
 //inicia el juego Tetris.
 var key:char;
-	P,SP:figuras.pieza; //pieza y sig pieza
+	P:figuras.pieza;	//pieza
+	SP:vectorPiezas; 	//vector de sig pieza
 	Grilla:tablero.grilla;	//mapa del juego
 	tiempo, tiempoActual: Qword;	//numeros sin signo
-	nivel,lineasTotales:integer;
+	nivel,lineasTotales,i:integer;
 	score,highScore:longint;
 	intervalo,blocks:integer;
 	gameOver,quit:boolean;
@@ -65,7 +66,10 @@ var key:char;
 		//iniciamos la inerfaz de juego	
 		interfaz.iniciarJuego(Grilla);
 		figuras.elegirPieza(P);			//se elije la primera pieza
-		figuras.elegirPieza(SP);		//se elije la segunda pieza
+		
+		for i:=1 to 2 do
+			figuras.elegirPieza(SP[i]);		//se elijen las siguientes piezas
+			
 		figuras.crearPiezaInicial(P,Grilla,gameOver);	//se crea la primera pieza en la pos central superior
 		panelPiezaSiguiente(SP);		//creo la pieza siguiente en la interfaz
 		tiempo:=getTickCount64;

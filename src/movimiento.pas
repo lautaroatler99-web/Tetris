@@ -41,7 +41,7 @@ limitesPieza=array[1..4] of integer; //vector que retrata el lateral de la pieza
 
 procedure registrarAccion (	var key:char;
 							var P:figuras.pieza;
-							var SP:figuras.pieza;
+							var SP:figuras.vectorPiezas;
 							var Grilla:tablero.grilla;
 							var nivel:integer;
 							var score:longint;
@@ -557,7 +557,7 @@ procedure colapsarPieza(var P:figuras.pieza;var Grilla:tablero.grilla);
 
 
 procedure finalizarCaida(var P:figuras.pieza;
-						 var SP:figuras.pieza;
+						 var SP:figuras.vectorPiezas;
 						 var Grilla:tablero.grilla;
 						 var nivel:integer;
 						 var score:longint;
@@ -568,8 +568,9 @@ procedure finalizarCaida(var P:figuras.pieza;
 	//se encarga de todo el proceso una vez la pieza se haya asentado
 	begin
 		confirmarLinea(P,Grilla,nivel,score,lineasTotales);			//reviso si la caida de la pieza logro completar una linea
-		P:=SP;										//la pieza siguiente pasa a ser la actual
-		figuras.elegirPieza(SP);					//se elije la siguiente pieza
+		P:=SP[1];										//la pieza siguiente pasa a ser la actual
+		SP[1]:=SP[2];								//se desplazan las piezas del vector
+		figuras.elegirPieza(SP[2]);					//se elije la siguiente pieza
 		interfaz.panelPiezaSiguiente(SP);
 		figuras.crearPiezaInicial(P, Grilla,gameOver);			//la pieza llego al final y se crea una nueva
 		interfaz.actualizarContBloques(blocks);
@@ -594,7 +595,7 @@ var color:integer;
 
 procedure registrarAccion 	(var key:char;
 							var P:figuras.pieza;
-							var SP:figuras.pieza;
+							var SP:figuras.vectorPiezas;
 							var Grilla:tablero.grilla;
 							var nivel:integer;
 							var score:longint;
