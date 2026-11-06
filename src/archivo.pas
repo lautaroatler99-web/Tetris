@@ -28,8 +28,8 @@ procedure abrirArchivo(var filePlayer:arch);
 		//IOresult guarda el numero del error. si es 0 significa que salio todo bien
 		
 		if (IOresult<>0) then begin	//si entra significa que el archivo no existe
-			forceDirectories('records');
-			rewrite(filePlayer);
+			forceDirectories('records');	//fuerzo la creacion de la carpeta /records
+			rewrite(filePlayer);			//fuerzo la creacion del archivo records.dat
 			end;
 		
 	end;
