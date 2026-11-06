@@ -297,11 +297,29 @@ var color:integer; colorRelleno:FillSettingsType;
 
 ////////////////////////////////////////////// SIG PIEZA ////////////////////////////////////////////// 
 
+
 procedure posicionSigPieza(var X:integer; var Y:integer);
 //calcula la posicion de la siguiente pieza
 	begin
 		X:=tablero.pixelX(-5)-10;
 		Y:=tablero.pixelY(10)-10;
+	end;
+
+
+procedure calibrarPiezas (tipo:string;var PosX:integer; var PosY:integer);
+//ajusta unos pixeles correspondientes para mostrar la pieza centrada
+	begin
+		if (tipo='figT') or (tipo='figS') or (tipo='figInvertedS') then
+			posY:=PosY+15;	//medio bloque abajo
+			
+		if (tipo='figQuad') then begin	//medio bloque abajo y a la derecha
+			PosX:=PosX+15;
+			posY:=PosY+15;	
+		end;
+		if (tipo='figL') then	//medio bloque a la izquierda
+			PosX:=PosX-15;
+		if (tipo='figInvertedL') then	//medio bloque a la derecha
+			PosX:=PosX+15;
 	end;
 	
 	
@@ -329,21 +347,11 @@ var i,j,tam:integer;
 						rectangle(x+1,y+1,x+tam-1,y+tam-1); //imprimo su borde
 					end;
 		end
-		//si es cuadrado, lo dibujo un poco mas a la derecha para centrarlo
-		else if (SP.tipo='figQuad') then begin
-			for i:=1 to max do 
-				for j:=1 to max do 
-					if (SP.posValida[i,j]) then begin
-						X:=posX + 15 + (j-1) *tam;		//lo centro un poco a la derecha
-						Y:=posY+ (i-1) * tam+15;			//y un poco abajo
-	
-						bar(x+1,y+1,x+tam-1,y+tam-1);		//imprimo el bloque
-						rectangle(x+1,y+1,x+tam-1,y+tam-1); //imprimo su borde
-					end;
-		end
 		
-		//si es cualquier otra pieza:
-		else begin
+		else begin	//para cualquier otra pieza
+		
+			calibrarPiezas(SP.tipo,PosX,PosY);
+			
 			for i:=1 to max do 
 				for j:=1 to max do 
 					if (SP.posValida[i,j]) then begin
