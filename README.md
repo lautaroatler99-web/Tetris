@@ -78,13 +78,13 @@ Desarrollado por Lautaro Atler
 
 ### game over
 
-![game over](assets/image_4.png)
+![game over](assets/gameover.gif)
 
 ### score
 
-![puntuación](assets/image_5.png)
+![puntuación](assets/image_4.png)
 
 ### ingresar nombre
 
-![ingresar nombre](assets/image_6.png)
+![ingresar nombre](assets/image_5.png)
 	
